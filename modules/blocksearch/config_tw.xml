@@ -2,7 +2,7 @@
 <module>
 	<name>blocksearch</name>
 	<displayName><![CDATA[快速搜尋區塊]]></displayName>
-	<version><![CDATA[1.5.1]]></version>
+	<version><![CDATA[1.5.2]]></version>
 	<description><![CDATA[新增一個快速搜尋欄位到網站]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[search_filter]]></tab>

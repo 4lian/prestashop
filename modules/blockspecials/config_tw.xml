@@ -2,7 +2,7 @@
 <module>
 	<name>blockspecials</name>
 	<displayName><![CDATA[特價商品區塊]]></displayName>
-	<version><![CDATA[1.1.1]]></version>
+	<version><![CDATA[1.1.2]]></version>
 	<description><![CDATA[增加顯示你當前的打折商品的區塊。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[pricing_promotion]]></tab>

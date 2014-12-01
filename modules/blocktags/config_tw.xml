@@ -2,7 +2,7 @@
 <module>
 	<name>blocktags</name>
 	<displayName><![CDATA[標籤區塊]]></displayName>
-	<version><![CDATA[1.2.1]]></version>
+	<version><![CDATA[1.2.3]]></version>
 	<description><![CDATA[添加一個您的商品標籤模塊。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

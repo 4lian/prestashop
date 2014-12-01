@@ -2,7 +2,7 @@
 <module>
 	<name>blockcmsinfo</name>
 	<displayName><![CDATA[自定內容管理系統資訊區塊]]></displayName>
-	<version><![CDATA[1.5.1]]></version>
+	<version><![CDATA[1.5.2]]></version>
 	<description><![CDATA[在商店欄內新增自定制資料區塊.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

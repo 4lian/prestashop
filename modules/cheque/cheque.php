@@ -40,7 +40,7 @@ class Cheque extends PaymentModule
 	{
 		$this->name = 'cheque';
 		$this->tab = 'payments_gateways';
-		$this->version = '2.5';
+		$this->version = '2.5.3';
 		$this->author = 'PrestaShop';
 		$this->controllers = array('payment', 'validation');
 
@@ -153,7 +153,7 @@ class Cheque extends PaymentModule
 			return;
 
 		$state = $params['objOrder']->getCurrentState();
-		if ($state == Configuration::get('PS_OS_CHEQUE') || $state == Configuration::get('PS_OS_OUTOFSTOCK'))
+		if (in_array($state, array(Configuration::get('PS_OS_CHEQUE'), Configuration::get('PS_OS_OUTOFSTOCK'), Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'))))
 		{
 			$this->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
@@ -195,12 +195,14 @@ class Cheque extends PaymentModule
 						'type' => 'text',
 						'label' => $this->l('Pay to the order of (name)'),
 						'name' => 'CHEQUE_NAME',
+						'required' => true
 					),
 					array(
 						'type' => 'textarea',
 						'label' => $this->l('Address'),
 						'desc' => $this->l('Address where the check should be sent to.'),
 						'name' => 'CHEQUE_ADDRESS',
+						'required' => true
 					),
 				),
 				'submit' => array(

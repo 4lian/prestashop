@@ -2,7 +2,7 @@
 <module>
 	<name>blockcms</name>
 	<displayName><![CDATA[內容管理系統區塊]]></displayName>
-	<version><![CDATA[1.9]]></version>
+	<version><![CDATA[2.0.1]]></version>
 	<description><![CDATA[新增可顯示數個CMS連結區塊]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

@@ -2,7 +2,7 @@
 <module>
 	<name>cheque</name>
 	<displayName><![CDATA[以支票付款]]></displayName>
-	<version><![CDATA[2.5]]></version>
+	<version><![CDATA[2.5.3]]></version>
 	<description><![CDATA[這個模組允許您接受以支票付款]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>

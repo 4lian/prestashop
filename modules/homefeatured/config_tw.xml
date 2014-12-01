@@ -2,7 +2,7 @@
 <module>
 	<name>homefeatured</name>
 	<displayName><![CDATA[在首頁推薦產品]]></displayName>
-	<version><![CDATA[1.5]]></version>
+	<version><![CDATA[1.6.2]]></version>
 	<description><![CDATA[顯示在您的主頁中央的特色商品。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

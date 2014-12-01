@@ -2,7 +2,7 @@
 <module>
 	<name>blocksocial</name>
 	<displayName><![CDATA[社交網路區塊]]></displayName>
-	<version><![CDATA[1.1.2]]></version>
+	<version><![CDATA[1.1.5]]></version>
 	<description><![CDATA[允許您添加您品牌的社交網絡賬號信息。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

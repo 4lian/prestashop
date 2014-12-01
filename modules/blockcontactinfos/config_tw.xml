@@ -2,7 +2,7 @@
 <module>
 	<name>blockcontactinfos</name>
 	<displayName><![CDATA[聯絡資料區塊]]></displayName>
-	<version><![CDATA[1.1.1]]></version>
+	<version><![CDATA[1.1.2]]></version>
 	<description><![CDATA[這個模組加入一個可以自訂的區塊讓您顯示商店的聯絡資訊]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

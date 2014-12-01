@@ -2,7 +2,7 @@
 <module>
 	<name>blocktopmenu</name>
 	<displayName><![CDATA[上方水平選單]]></displayName>
-	<version><![CDATA[1.13]]></version>
+	<version><![CDATA[2.0.9]]></version>
 	<description><![CDATA[在網站上方顯示一個水平選單。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

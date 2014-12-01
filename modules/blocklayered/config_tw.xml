@@ -2,7 +2,7 @@
 <module>
 	<name>blocklayered</name>
 	<displayName><![CDATA[分層導航區塊]]></displayName>
-	<version><![CDATA[1.11]]></version>
+	<version><![CDATA[2.0.5]]></version>
 	<description><![CDATA[顯示具有分層導航篩選區域。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

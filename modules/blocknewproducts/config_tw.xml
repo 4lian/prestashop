@@ -2,7 +2,7 @@
 <module>
 	<name>blocknewproducts</name>
 	<displayName><![CDATA[新產品區塊]]></displayName>
-	<version><![CDATA[1.9.1]]></version>
+	<version><![CDATA[1.9.2]]></version>
 	<description><![CDATA[顯示一個區塊來推薦商店最新產品]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

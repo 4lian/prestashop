@@ -2,7 +2,7 @@
 <module>
 	<name>blockcategories</name>
 	<displayName><![CDATA[分類區塊]]></displayName>
-	<version><![CDATA[2.8.1]]></version>
+	<version><![CDATA[2.8.3]]></version>
 	<description><![CDATA[新增功能性產品分類區塊]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

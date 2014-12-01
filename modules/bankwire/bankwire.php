@@ -40,7 +40,7 @@ class BankWire extends PaymentModule
 	{
 		$this->name = 'bankwire';
 		$this->tab = 'payments_gateways';
-		$this->version = '0.7.2';
+		$this->version = '1.0.3';
 		$this->author = 'PrestaShop';
 		$this->controllers = array('payment', 'validation');
 		
@@ -159,7 +159,7 @@ class BankWire extends PaymentModule
 			return;
 
 		$state = $params['objOrder']->getCurrentState();
-		if ($state == Configuration::get('PS_OS_BANKWIRE') || $state == Configuration::get('PS_OS_OUTOFSTOCK'))
+		if (in_array($state, array(Configuration::get('PS_OS_BANKWIRE'), Configuration::get('PS_OS_OUTOFSTOCK'), Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'))))
 		{
 			$this->smarty->assign(array(
 				'total_to_pay' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
@@ -202,17 +202,20 @@ class BankWire extends PaymentModule
 						'type' => 'text',
 						'label' => $this->l('Account owner'),
 						'name' => 'BANK_WIRE_OWNER',
+						'required' => true
 					),
 					array(
 						'type' => 'textarea',
 						'label' => $this->l('Details'),
 						'name' => 'BANK_WIRE_DETAILS',
-						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc.')
+						'desc' => $this->l('Such as bank branch, IBAN number, BIC, etc.'),
+						'required' => true
 					),
 					array(
 						'type' => 'textarea',
 						'label' => $this->l('Bank address'),
 						'name' => 'BANK_WIRE_ADDRESS',
+						'required' => true
 					),
 				),
 				'submit' => array(
