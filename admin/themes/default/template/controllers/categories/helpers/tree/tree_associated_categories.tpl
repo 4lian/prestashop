@@ -82,7 +82,7 @@
 	$(document).ready(function(){
 		$('#{$id|escape:'html':'UTF-8'}').tree('expandAll');
 		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(function(){
-			location.href = location.href.replace(/&id_category=[0-9]*/, '') + '&id_category=' + $(this).val();
+			location.href = location.href.replace(/&id_category=[0-9]*/, '') + '&id_category=' + $(this).val() + '&viewcategory';
 		});
 
 		
