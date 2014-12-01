@@ -57,6 +57,7 @@ class AdminCategoriesController extends AdminCategoriesControllerCore
 		$root = Category::getRootCategory();
 		$tree = new HelperTreeCategories('associated-categories-tree', 'Associated categories');
 		$tree->setTemplate('tree_associated_categories.tpl')
+			->setTemplateDirectory('helpers/alltree')
 			->setHeaderTemplate('tree_associated_header.tpl')
 			->setRootCategory($root->id)
 			->setUseSearch(true);
