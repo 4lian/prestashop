@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blockadvertising</name>
+	<displayName><![CDATA[廣告區塊]]></displayName>
+	<version><![CDATA[0.9.1]]></version>
+	<description><![CDATA[在您的網站選擇區域加入一個廣告區塊.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[advertising_marketing]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

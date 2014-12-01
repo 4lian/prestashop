@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>blockcmsinfo</name>
+	<displayName><![CDATA[自定內容管理系統資訊區塊]]></displayName>
+	<version><![CDATA[1.5.1]]></version>
+	<description><![CDATA[在商店欄內新增自定制資料區塊.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[front_office_features]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>
