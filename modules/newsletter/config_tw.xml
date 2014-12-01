@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>newsletter</name>
+	<displayName><![CDATA[電子報]]></displayName>
+	<version><![CDATA[2.4.4]]></version>
+	<description><![CDATA[為大量郵件產生一個.CSV檔案]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

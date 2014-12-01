@@ -2,7 +2,7 @@
 <module>
 	<name>blocklink</name>
 	<displayName><![CDATA[連結區塊]]></displayName>
-	<version><![CDATA[1.5.4]]></version>
+	<version><![CDATA[1.5.6]]></version>
 	<description><![CDATA[新增一個額外連結的區塊]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

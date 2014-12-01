@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>riskified</name>
+	<displayName><![CDATA[Riskified]]></displayName>
+	<version><![CDATA[1.1.4]]></version>
+	<description><![CDATA[Riskified reviews, approves &amp;amp; guarantees transactions you would otherwise decline]]></description>
+	<author><![CDATA[Riskified.com]]></author>
+	<tab><![CDATA[payment_security]]></tab>
+	<confirmUninstall><![CDATA[Are you sure you want to uninstall?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

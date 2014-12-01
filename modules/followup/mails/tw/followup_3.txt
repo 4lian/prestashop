@@ -1,0 +1,18 @@
+
+[{shop_url}] 
+
+{lastname} {firstname} 您好,
+
+感謝您的信任。 
+
+As appreciation for your loyalty, we want to give you a discount of
+{amount}% valid on your next order! This offer is valid for {days}
+days, so do not waste a moment!
+
+這是您的優惠券： {voucher_num}
+
+在您的購物車中輸入驗證碼去領取您的折扣。 		 
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

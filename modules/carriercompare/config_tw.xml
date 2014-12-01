@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>carriercompare</name>
+	<displayName><![CDATA[預估運費]]></displayName>
+	<version><![CDATA[2.2.0]]></version>
+	<description><![CDATA[結帳前比較貨運商選項]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[shipping_logistics]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

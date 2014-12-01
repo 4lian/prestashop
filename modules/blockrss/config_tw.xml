@@ -2,7 +2,7 @@
 <module>
 	<name>blockrss</name>
 	<displayName><![CDATA[RSS Feed區塊]]></displayName>
-	<version><![CDATA[1.2.1]]></version>
+	<version><![CDATA[1.2.2]]></version>
 	<description><![CDATA[新增一個顯示RSS Feed的區塊。]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

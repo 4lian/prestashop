@@ -2,7 +2,7 @@
 <module>
 	<name>blockcustomerprivacy</name>
 	<displayName><![CDATA[客戶資料隱私聲明區塊]]></displayName>
-	<version><![CDATA[1.1.1]]></version>
+	<version><![CDATA[1.1.2]]></version>
 	<description><![CDATA[新增一個區塊來顯示客戶隱私資料的信息]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[front_office_features]]></tab>

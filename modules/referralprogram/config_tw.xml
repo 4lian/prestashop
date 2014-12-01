@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>referralprogram</name>
+	<displayName><![CDATA[客戶推廣計劃]]></displayName>
+	<version><![CDATA[1.6.2]]></version>
+	<description><![CDATA[集成到您的店舖推薦計劃系統。]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[advertising_marketing]]></tab>
+	<confirmUninstall><![CDATA[所有贊助商和朋友將被刪除。您確定要移除這個模組？]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

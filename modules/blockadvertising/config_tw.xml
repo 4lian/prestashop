@@ -2,7 +2,7 @@
 <module>
 	<name>blockadvertising</name>
 	<displayName><![CDATA[廣告區塊]]></displayName>
-	<version><![CDATA[0.9.1]]></version>
+	<version><![CDATA[0.9.2]]></version>
 	<description><![CDATA[在您的網站選擇區域加入一個廣告區塊.]]></description>
 	<author><![CDATA[PrestaShop]]></author>
 	<tab><![CDATA[advertising_marketing]]></tab>
