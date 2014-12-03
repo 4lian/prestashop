@@ -319,6 +319,49 @@ class AdminManufacturersControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
+					'type' => 'text',
+					'label' => $this->l('Location'),
+					'name' => 'location',
+					'lang' => true,
+					'col' => 4,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Crop'),
+					'name' => 'crop',
+					'lang' => true,
+					'col' => 4,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Subject'),
+					'name' => 'subject',
+					'lang' => true,
+					'col' => 4,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Brief'),
+					'name' => 'brief',
+					'lang' => true,
+					'col' => 4,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+				),
+				array(
+					'type' => 'textarea',
+					'label' => $this->l('Certification'),
+					'name' => 'certification',
+					'lang' => true,
+					'cols' => 60,
+					'rows' => 10,
+					'autoload_rte' => 'rte',
+					'col' => 10,
+					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
+				),
+				array(
 					'type' => 'textarea',
 					'label' => $this->l('Short description'),
 					'name' => 'short_description',
@@ -326,7 +369,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'cols' => 60,
 					'rows' => 10,
 					'autoload_rte' => 'rte', //Enable TinyMCE editor for short description
-					'col' => 6,
+					'col' => 10,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
@@ -336,7 +379,7 @@ class AdminManufacturersControllerCore extends AdminController
 					'lang' => true,
 					'cols' => 60,
 					'rows' => 10,
-					'col' => 6,
+					'col' => 10,
 					'autoload_rte' => 'rte', //Enable TinyMCE editor for description
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
