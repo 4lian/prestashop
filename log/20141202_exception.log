@@ -1,0 +1,42 @@
+*ERROR* 	2014/12/02 - 00:43:44: Property Category->name is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 00:48:10: Property Category->name is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 00:48:34: Property Category->name is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 01:22:58: Property Category->link_rewrite is not valid at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 01:23:16: Property Category->link_rewrite is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 04:08:37: Property Product->link_rewrite is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 04:10:29: Property Product->name is empty at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 04:14:38: Property Product->price is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 04:30:24: Property Product->name is not valid at line 887 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:53:48: Property Customer->lastname is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:54:03: Property Customer->lastname is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:54:26: Property Customer->lastname is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:54:39: Property Customer->username is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:56:52: Property Customer->username is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 21:59:56: Property Customer->firstname is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:01:40: Property Customer->birthday is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:04:45: Property Customer->birthday is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:07:23: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:10:44: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:11:15: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:11:54: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:12:50: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:14:12: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:15:40: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:16:26: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:18:20: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:21:04: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:21:41: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:22:19: Property Customer->firstname is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:23:34: Property Customer->firstname is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:24:35: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:25:41: Property Customer->email is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:26:15: Property Customer->email is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:26:59: Property Customer->firstname is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 22:31:25: Property Customer->username is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:39:45: Property Address->alias is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:42:03: Property Address->phone is not valid at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:45:20: Property Address->address1 is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:46:16: Property Address->address1 is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:47:33: Property Address->city is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:48:11: Property Address->city is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/02 - 23:51:07: Property Address->address2 is not valid at line 846 in file classes/ObjectModel.php

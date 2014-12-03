@@ -1,0 +1,8 @@
+*ERROR* 	2014/12/03 - 02:24:15: Duplicate entry '8-0' for key 'PRIMARY'<br /><br /><pre>INSERT INTO `ps_feature_product` (`id_feature`, `id_product`, `id_feature_value`) VALUES ('8', '0', '0')</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/03 - 02:58:13: Duplicate entry '10-1' for key 'PRIMARY'<br /><br /><pre>INSERT INTO `ps_feature_value_lang` (`id_feature_value`, `id_lang`, `value`) VALUES ('10', '1', '苗栗卓蘭第一家楊桃農友所種植，昔日打造卓蘭水果王國美名的好吃楊桃。\r\n六十年老欉台灣原生珍貴稀有軟枝楊桃，皮薄且軟、水分甜份都飽滿，不澀順口。')</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/03 - 20:19:14: Property Order->id_address_delivery is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/03 - 20:20:01: Property Order->payment is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/03 - 20:20:21: Property Order->total_paid is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/03 - 20:25:49: Property Order->total_paid is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/03 - 20:26:30: Property Order->total_paid is empty at line 846 in file classes/ObjectModel.php
+*ERROR* 	2014/12/03 - 20:28:17: Property Order->total_paid is empty at line 846 in file classes/ObjectModel.php
