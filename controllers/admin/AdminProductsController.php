@@ -180,6 +180,8 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.') 
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
+		$this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'manufacturer` AS manuf ON (manuf.id_manufacturer = a.`id_manufacturer`)';
+		$this->_select .= 'manuf.`name` AS `manuf`, ';
 		
 		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
 		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
@@ -198,6 +200,10 @@ class AdminProductsControllerCore extends AdminController
 			'align' => 'center',
 			'class' => 'fixed-width-xs',
 			'type' => 'int'
+		);
+		$this->fields_list['manuf'] = array(
+			'title' => $this->l('Manufacturer'),
+			'filter_key' => 'manuf!name'
 		);
 		$this->fields_list['image'] = array(
 			'title' => $this->l('Image'),

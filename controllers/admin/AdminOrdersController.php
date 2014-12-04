@@ -45,12 +45,12 @@ class AdminOrdersControllerCore extends AdminController
 		$this->_select = '
 		a.id_currency,
 		a.id_order AS id_pdf,
-		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
+		CONCAT(LEFT(c.`firstname`, 10), \' \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
 		os.`color`,
 		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
 		country_lang.name as cname,
-		IF(a.valid, 1, 0) badge_success';
+		IF(a.valid, 1, 0) badge_success, ';
 
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
@@ -59,6 +59,19 @@ class AdminOrdersControllerCore extends AdminController
 		INNER JOIN `'._DB_PREFIX_.'country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = '.(int)$this->context->language->id.')
 		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
 		LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$this->context->language->id.')';
+
+		$this->_join .= '
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `'._DB_PREFIX_.'product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `'._DB_PREFIX_.'product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = '.(int)$this->context->language->id.')
+		LEFT JOIN `'._DB_PREFIX_.'manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
+		';
+		$this->_select .= '
+		product_lang.`name` AS `product_name`,
+		product.`reference` AS `product_reference`,
+		manufacturer.`name` AS `manufacturer_name`
+		';
+
 		$this->_orderBy = 'id_order';
 		$this->_orderWay = 'DESC';
 
@@ -75,18 +88,33 @@ class AdminOrdersControllerCore extends AdminController
 			'reference' => array(
 				'title' => $this->l('Reference')
 			),
-			'new' => array(
-				'title' => $this->l('New client'),
-				'align' => 'text-center',
-				'type' => 'bool',
-				'tmpTableFilter' => true,
-				'orderby' => false
+			'manufacturer_name' => array(
+				'title' => $this->l('Manufacturer'),
+				'filter_key' => 'manufacturer!name',
+				'width' => 80,
 			),
+			'product_name' => array(
+				'title' => $this->l('Products'),
+				'filter_key' => 'product_lang!name',
+				'width' => 150,
+			),
+			// 'new' => array(
+			// 	'title' => $this->l('New client'),
+			// 	'align' => 'text-center',
+			// 	'type' => 'bool',
+			// 	'tmpTableFilter' => true,
+			// 	'orderby' => false
+			// ),
 			'customer' => array(
 				'title' => $this->l('Customer'),
 				'havingFilter' => true,
 			),
 		);
+
+		$this->distinct_data = array(
+			'distinct' => 'id_order',
+			'combinations' => array('product_name', 'manufacturer_name'),
+			);
 
 		if (Configuration::get('PS_B2B_ENABLE'))
 		{
@@ -135,7 +163,8 @@ class AdminOrdersControllerCore extends AdminController
 			)
 		));
 		
-		if (Country::isCurrentlyUsed('country', true))
+		// if (Country::isCurrentlyUsed('country', true))
+		if (false)
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT DISTINCT c.id_country, cl.`name`

@@ -50,6 +50,8 @@ class AdminControllerCore extends Controller
 
 	public $list_id;
 
+	public $distinct_data;
+
 	/** @var string Object identifier inside the associated table */
 	protected $identifier = false;
 	protected $identifier_name = 'name';
@@ -2825,6 +2827,40 @@ class AdminControllerCore extends Controller
 			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
 			$this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
+
+			if (isset($this->distinct_data)) {
+				$collect = array();
+				$distinct_name = $this->distinct_data['distinct'];
+				$combinations = $this->distinct_data['combinations'];
+				foreach ($this->_list as $row) {
+					$distinct = $row[$distinct_name];
+					if (!array_key_exists($distinct, $collect)) {
+						$collect[$distinct] = $row;
+						foreach ($combinations as $combination) {
+							$collect[$distinct][$combination] = array($row[$combination]);
+						}
+					}
+					else {
+						foreach ($combinations as $combination) {
+							if (!in_array($row[$combination], $collect[$distinct][$combination])) {
+								$collect[$distinct][$combination][] = $row[$combination];
+							}
+						}
+					}
+				}
+				$collect2 = array();
+				foreach ($collect as $key => $object) {
+					foreach ($combinations as $combination) {
+						$combination_string = '';
+						foreach ($object[$combination] as $value) {
+							$combination_string .= '>> '.$value.' ';
+						}
+						$object[$combination] = $combination_string;
+					}
+					$collect2[] = $object;
+				}
+				$this->_list = $collect2;
+			}
 
 			if ($this->_list === false)
 			{
