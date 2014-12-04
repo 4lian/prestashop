@@ -1,0 +1,331 @@
+*ERROR* 	2014/12/05 - 01:12:58: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.`product_id` AS `product_id`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_cust' at line 11<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_successodet.`product_id` AS `product_id`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)LEFT JOIN `ps_order_detail` AS odet ON (odet.id_order = a.`id_order`) 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:14:32: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.`product_id` AS `product_id`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_cust' at line 11<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_successodet.`product_id` AS `product_id`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1), LEFT JOIN `ps_order_detail` AS odet ON (odet.id_order = a.`id_order`) 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:29:47: Unknown column 'product_lang.product_name' in 'field list'<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, product_lang.`product_name` AS `product_name`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`product_id` AND product_lang.`id_lang` = 1)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:30:15: Unknown column 'product_lang.product_id' in 'on clause'<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, product_lang.`name` AS `product_name`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`product_id` AND product_lang.`id_lang` = 1)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:32:07: Unknown column 'product_name.name' in 'field list'<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,product_name.name as product_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, product_lang.`name` AS `product_name`
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:44:30: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'manufacturer.`name` AS `manufacturer_name`
+		
+			FROM `ps_orders` a
+			
+			
+		LE' at line 13<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,product_lang.name as product_name,manufacturer.name as manufacturer_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, 
+		product_lang.`name` AS `product_name`
+		manufacturer.`name` AS `manufacturer_name`
+		
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		LEFT JOIN `ps_manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:45:00: Column 'reference' in field list is ambiguous<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,`reference`,product_lang.name as product_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, 
+		product_lang.`name` AS `product_name`
+		
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 01:47:13: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'product.`reference` AS `product_reference`
+		
+			FROM `ps_orders` a
+			
+			
+		LE' at line 13<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,product_lang.name as product_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, 
+		product_lang.`name` AS `product_name`
+		product.`reference` AS `product_reference`
+		
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 02:01:25: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DISTINCT a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastnam' at line 5<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,manufacturer.name as manufacturer_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		a.id_currency,
+		DISTINCT a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, 
+		product_lang.`name` AS `product_name`,
+		product.`reference` AS `product_reference`,
+		manufacturer.`name` AS `manufacturer_name`
+		
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		LEFT JOIN `ps_manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php
+*ERROR* 	2014/12/05 - 02:02:02: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DISTINCT a.id_order,
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`f' at line 4<br /><br /><pre>
+			SELECT SQL_CALC_FOUND_ROWS
+			a.`id_order`,manufacturer.name as manufacturer_name,`total_paid_tax_incl`,`payment`,a.date_add as date_add
+			, 
+		DISTINCT a.id_order,
+		a.id_currency,
+		a.id_order AS id_pdf,
+		CONCAT(LEFT(c.`firstname`, 10), ' ', c.`lastname`) AS `customer`,
+		osl.`name` AS `osname`,
+		os.`color`,
+		IF((SELECT COUNT(so.id_order) FROM `ps_orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		country_lang.name as cname,
+		IF(a.valid, 1, 0) badge_success, 
+		product_lang.`name` AS `product_name`,
+		product.`reference` AS `product_reference`,
+		manufacturer.`name` AS `manufacturer_name`
+		
+			FROM `ps_orders` a
+			
+			
+		LEFT JOIN `ps_customer` c ON (c.`id_customer` = a.`id_customer`)
+		INNER JOIN `ps_address` address ON address.id_address = a.id_address_delivery
+		INNER JOIN `ps_country` country ON address.id_country = country.id_country
+		INNER JOIN `ps_country_lang` country_lang ON (country.`id_country` = country_lang.`id_country` AND country_lang.`id_lang` = 1)
+		LEFT JOIN `ps_order_state` os ON (os.`id_order_state` = a.`current_state`)
+		LEFT JOIN `ps_order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = 1)
+		LEFT JOIN `ps_order_detail` AS order_detail ON (order_detail.id_order = a.`id_order`)
+		LEFT JOIN `ps_product` AS product ON (order_detail.`product_id` = product.`id_product`)
+		LEFT JOIN `ps_product_lang` AS product_lang ON (order_detail.`product_id` = product_lang.`id_product` AND product_lang.`id_lang` = 1)
+		LEFT JOIN `ps_manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
+		 
+			
+			WHERE 1 
+			
+			
+			ORDER BY a.`id_order` DESC LIMIT 0,50</pre> at line 635 in file classes/db/Db.php

@@ -154,3 +154,9 @@
     [trace_id] => spa-548025c6ca50c
 )
 
+04-12-2014 14:37:50: Sending request to "https://api.shopgate.com/merchant/": Array
+(
+    [action] => get_mobile_redirect_user_agents
+    [trace_id] => spa-548071bebfb98
+)
+
