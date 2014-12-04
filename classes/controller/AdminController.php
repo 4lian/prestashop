@@ -2851,10 +2851,7 @@ class AdminControllerCore extends Controller
 				$collect2 = array();
 				foreach ($collect as $key => $object) {
 					foreach ($combinations as $combination) {
-						$combination_string = '';
-						foreach ($object[$combination] as $value) {
-							$combination_string .= '>> '.$value.' ';
-						}
+						$combination_string = implode('<hr class="item-separator">', $object[$combination]);
 						$object[$combination] = $combination_string;
 					}
 					$collect2[] = $object;

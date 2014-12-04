@@ -106,6 +106,8 @@
 						{$tr.$key|string_format:"%.2f"}
 					{elseif isset($params.type) && $params.type == 'percent'}
 						{$tr.$key} {l s='%'}
+					{elseif isset($params.type) && $params.type == 'html'}
+						{$tr.$key}
 					{* If type is 'editable', an input is created *}
 					{elseif isset($params.type) && $params.type == 'editable' && isset($tr.id)}
 						<input type="text" name="{$key}_{$tr.id}" value="{$tr.$key|escape:'html':'UTF-8'}" class="{$key}" />

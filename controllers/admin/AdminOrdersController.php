@@ -92,11 +92,13 @@ class AdminOrdersControllerCore extends AdminController
 				'title' => $this->l('Manufacturer'),
 				'filter_key' => 'manufacturer!name',
 				'width' => 80,
+				'type' => 'html',
 			),
 			'product_name' => array(
 				'title' => $this->l('Products'),
 				'filter_key' => 'product_lang!name',
 				'width' => 150,
+				'type' => 'html',
 			),
 			// 'new' => array(
 			// 	'title' => $this->l('New client'),
