@@ -67,6 +67,7 @@ class AdminOrdersControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
 		';
 		$this->_select .= '
+		a.`reference` AS `reference`,
 		c.`email` AS `customer_email`,
 		order_detail.`product_name` AS `product_name`,
 		order_detail.`product_quantity` AS `product_quantity`,
@@ -91,7 +92,8 @@ class AdminOrdersControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'reference' => array(
-				'title' => $this->l('Reference')
+				'title' => $this->l('Reference'),
+				'filter_key' => 'a!reference',
 			),
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),
@@ -218,7 +220,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->bulk_actions = array(
-			'exportExcel' => array('text' => $this->l('Export Order Export'), 'icon' => 'icon-refresh'),
+			'exportExcel' => array('text' => $this->l('Export Order Export'), 'icon' => 'icon-download-alt'),
 			'updateOrderStatus' => array('text' => $this->l('Change Order Status'), 'icon' => 'icon-refresh')
 		);
 
