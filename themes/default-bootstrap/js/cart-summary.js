@@ -42,6 +42,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.voucher_name', function(e){
 		$('#discount_name').val($(this).data('code'));
+		$('#discount_name').closest('form').find('*[name="submitAddDiscount"]').click();
 	});
 
 	$('.cart_quantity_input').typeWatch({

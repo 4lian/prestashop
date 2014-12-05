@@ -176,7 +176,7 @@
 								{/if}
 								<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 									<fieldset>
-										<h4>{l s='Vouchers'}</h4>
+										<p id="title" class="title-offers">{l s='Vouchers'}</p>
 										<input type="text" class="discount_name form-control" id="discount_name" name="discount_name" value="{if isset($discount_name) && $discount_name}{$discount_name}{/if}" />
 										<input type="hidden" name="submitDiscount" />
 										<button type="submit" name="submitAddDiscount" class="button btn btn-default button-small">
@@ -185,11 +185,28 @@
 									</fieldset>
 								</form>
 								{if $displayVouchers}
-									<p id="title" class="title-offers">{l s='Take advantage of our exclusive offers:'}</p>
+									<p id="title" class="title-offers">點選以下你所擁有的折抵券代碼，加入使用</p>
 									<div id="display_cart_vouchers">
+										<table class="table table-bordered" style="width: 300px;margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th>代碼</th>
+													<th>數量</th>
+													<th>折抵金額</th>
+												</tr>
+											</thead>
+											<tbody>
 										{foreach $displayVouchers as $voucher}
-											{if $voucher.code != ''}<span class="voucher_name" data-code="{$voucher.code|escape:'html':'UTF-8'}">{$voucher.code|escape:'html':'UTF-8'}</span> - {/if}{$voucher.name}<br />
+											{if $voucher.code != ''}
+											<tr>
+												<td><span class="voucher_name" data-code="{$voucher.code|escape:'html':'UTF-8'}">{$voucher.code|escape:'html':'UTF-8'}</span></td>
+												<td>{$voucher.quantity}</td>
+												<td>{$voucher.value}</td>
+											</tr>
+											{/if}
 										{/foreach}
+											</tbody>
+										</table>
 									</div>
 								{/if}
 							{/if}
