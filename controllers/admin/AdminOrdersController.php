@@ -67,7 +67,12 @@ class AdminOrdersControllerCore extends AdminController
 		LEFT JOIN `'._DB_PREFIX_.'manufacturer` AS manufacturer ON (product.`id_manufacturer` = manufacturer.`id_manufacturer`)
 		';
 		$this->_select .= '
-		product_lang.`name` AS `product_name`,
+		c.`email` AS `customer_email`,
+		order_detail.`product_name` AS `product_name`,
+		order_detail.`product_quantity` AS `product_quantity`,
+		order_detail.`unit_price_tax_incl` AS `product_unit_price`,
+		order_detail.`total_price_tax_incl` AS `product_total_price`,
+		a.`total_paid` AS `total_paid`,
 		product.`reference` AS `product_reference`,
 		manufacturer.`name` AS `manufacturer_name`
 		';
@@ -110,12 +115,19 @@ class AdminOrdersControllerCore extends AdminController
 			'customer' => array(
 				'title' => $this->l('Customer'),
 				'havingFilter' => true,
+				'width' => 80,
+			),
+			'customer_email' => array(
+				'title' => $this->l('Email'),
+				'havingFilter' => true,
 			),
 		);
 
 		$this->distinct_data = array(
 			'distinct' => 'id_order',
-			'combinations' => array('product_name', 'manufacturer_name'),
+			'combinations' => array('product_name', 'manufacturer_name', 'product_quantity','product_unit_price','product_total_price'),
+			'check_repeat' => true,
+			'separator' => '<hr class="item-separator">',
 			);
 
 		if (Configuration::get('PS_B2B_ENABLE'))
@@ -155,14 +167,14 @@ class AdminOrdersControllerCore extends AdminController
 				'type' => 'datetime',
 				'filter_key' => 'a!date_add'
 			),
-			'id_pdf' => array(
-				'title' => $this->l('PDF'),
-				'align' => 'text-center',
-				'callback' => 'printPDFIcons',
-				'orderby' => false,
-				'search' => false,
-				'remove_onclick' => true
-			)
+			// 'id_pdf' => array(
+			// 	'title' => $this->l('PDF'),
+			// 	'align' => 'text-center',
+			// 	'callback' => 'printPDFIcons',
+			// 	'orderby' => false,
+			// 	'search' => false,
+			// 	'remove_onclick' => true
+			// )
 		));
 		
 		// if (Country::isCurrentlyUsed('country', true))
@@ -206,6 +218,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 
 		$this->bulk_actions = array(
+			'exportExcel' => array('text' => $this->l('Export Order Export'), 'icon' => 'icon-refresh'),
 			'updateOrderStatus' => array('text' => $this->l('Change Order Status'), 'icon' => 'icon-refresh')
 		);
 
@@ -357,7 +370,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
-	
+
 	public function processBulkUpdateOrderStatus()
 	{
 		if (Tools::isSubmit('submitUpdateOrderStatus')

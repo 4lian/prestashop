@@ -808,6 +808,36 @@ class AdminControllerCore extends Controller
 		$this->layout = 'layout-export.tpl';
 	}
 
+	public function processBulkExportExcel($text_delimiter = '"')
+	{
+		if (ob_get_level() && ob_get_length() > 0)
+			ob_clean();
+
+		$separator_retain = $this->distinct_data['separator'];
+		$this->distinct_data['check_repeat'] = false;
+		$this->distinct_data['separator'] = '<br>';
+
+		$this->getList($this->context->language->id, null, null, 0, 5);
+		if (!count($this->_list))
+			return;
+
+		// print_r($this->_list);
+		$filename = "Orders-".date("YmdHi").".xls"; 
+		header("Content-type:application/excel");
+		header("Content-Disposition:attachment;filename=$filename");
+
+		echo $this->context->smarty->createTemplate(
+			_PS_BO_ALL_THEMES_DIR_.'/default/template/controllers/orders/excel.tpl',
+			$this->context->smarty
+		)->assign(array(
+			'list' => $this->_list,
+		))->fetch();
+
+		$this->distinct_data['check_repeat'] = true;
+		$this->distinct_data['separator'] = $separator_retain;
+		die();
+	}
+
 	/**
 	 * Object Delete
 	 */
@@ -2832,6 +2862,9 @@ class AdminControllerCore extends Controller
 				$collect = array();
 				$distinct_name = $this->distinct_data['distinct'];
 				$combinations = $this->distinct_data['combinations'];
+				$check_repeat = $this->distinct_data['check_repeat'];
+				$separator = $this->distinct_data['separator'];
+
 				foreach ($this->_list as $row) {
 					$distinct = $row[$distinct_name];
 					if (!array_key_exists($distinct, $collect)) {
@@ -2842,7 +2875,12 @@ class AdminControllerCore extends Controller
 					}
 					else {
 						foreach ($combinations as $combination) {
-							if (!in_array($row[$combination], $collect[$distinct][$combination])) {
+							if ($check_repeat) {
+								if (!in_array($row[$combination], $collect[$distinct][$combination])) {
+									$collect[$distinct][$combination][] = $row[$combination];
+								}
+							}
+							else {
 								$collect[$distinct][$combination][] = $row[$combination];
 							}
 						}
@@ -2851,7 +2889,7 @@ class AdminControllerCore extends Controller
 				$collect2 = array();
 				foreach ($collect as $key => $object) {
 					foreach ($combinations as $combination) {
-						$combination_string = implode('<hr class="item-separator">', $object[$combination]);
+						$combination_string = implode($separator, $object[$combination]);
 						$object[$combination] = $combination_string;
 					}
 					$collect2[] = $object;
