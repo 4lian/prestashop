@@ -8,6 +8,9 @@ SetEnv HTTP_MOD_REWRITE On
 </IfModule>
 
 RewriteEngine on
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule . - [E=HTTP_AUTHORIZATION:%1]
+
 RewriteRule . - [E=REWRITEBASE:/]
 RewriteRule ^api/?(.*)$ %{ENV:REWRITEBASE}webservice/dispatcher.php?url=$1 [QSA,L]
 
@@ -42,6 +45,7 @@ AddType application/x-font-woff .woff
 ErrorDocument 404 /index.php?controller=404
 
 # ~~end~~ Do not remove this comment, Prestashop will keep automatically the code outside this comment when .htaccess will be generated again
+
 # start ~ module watermark section
 Options +FollowSymLinks
 RewriteEngine On
