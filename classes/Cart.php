@@ -71,6 +71,8 @@ class CartCore extends ObjectModel
 	/** @var integer Carrier ID */
 	public $id_carrier = 0;
 
+	public $used_loyalty = 0;
+
 	/** @var string Object last modification date */
 	public $date_upd;
 
@@ -116,6 +118,7 @@ class CartCore extends ObjectModel
 			'delivery_option' => 		array('type' => self::TYPE_STRING),
 			'secure_key' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'allow_seperated_package' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'used_loyalty' => 		    array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
 		),
@@ -156,6 +159,9 @@ class CartCore extends ObjectModel
 		
 		if (!is_null($id_lang))
 			$this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
+
+		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
+		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
 
 		if ($this->id_customer)
 		{
@@ -1553,6 +1559,9 @@ class CartCore extends ObjectModel
 
 		if ($type == Cart::BOTH)
 			$order_total += $shipping_fees + $wrapping_fees;
+
+		if ($type == Cart::BOTH)
+			$order_total -= $this->used_loyalty;
 
 		if ($order_total < 0 && $type != Cart::ONLY_DISCOUNTS)
 			return 0;
@@ -2975,6 +2984,8 @@ class CartCore extends ObjectModel
 			if ($cart_rule['value_real'] == 0)
 				unset($cart_rules[$key]);
 
+		$customer_points = (int)LoyaltyModule::getPointsByCustomer((int)Context::getContext()->customer->id);
+
 		return array(
 			'delivery' => $delivery,
 			'delivery_state' => State::getNameById($delivery->id_state),
@@ -2984,6 +2995,8 @@ class CartCore extends ObjectModel
 			'products' => array_values($products),
 			'gift_products' => $gift_products,
 			'discounts' => array_values($cart_rules),
+			'used_loyalty' => $this->used_loyalty,
+			'total_loyalty' => LoyaltyModule::getVoucherValue($customer_points, (int)Context::getContext()->currency->id),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $total_discounts,
 			'total_discounts_tax_exc' => $total_discounts_tax_exc,
@@ -3738,5 +3751,14 @@ class CartCore extends ObjectModel
 				$addresses_instance_without_carriers[] = new Address($id_address);
 			return $addresses_instance_without_carriers;
 		}
+	}
+
+	public function updateUseLoyalty($point)
+	{
+		$sql = 'UPDATE `'._DB_PREFIX_.'cart`
+			SET `used_loyalty` = '.(int)$point.'
+			WHERE `id_cart` = '.(int)$this->id.'
+				AND `id_shop` = '.(int)$this->id_shop;
+		Db::getInstance()->execute($sql);
 	}
 }

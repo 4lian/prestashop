@@ -34,6 +34,7 @@ class LoyaltyModule extends ObjectModel
 	public $id_order;
 	public $id_cart_rule;
 	public $points;
+	public $description;
 	public $date_add;
 	public $date_upd;
 
@@ -49,6 +50,7 @@ class LoyaltyModule extends ObjectModel
 			'id_order' =>			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'id_cart_rule' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'points' =>				array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'description' =>                   array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 250),
 			'date_add' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		)
@@ -185,7 +187,7 @@ class LoyaltyModule extends ObjectModel
 			$sql_period = ' AND datediff(NOW(),f.date_add) <= '.$validity_period;
 
 		$query = '
-		SELECT f.id_order AS id, f.date_add AS date, (o.total_paid - o.total_shipping) total_without_shipping, f.points, f.id_loyalty, f.id_loyalty_state, fsl.name state
+		SELECT f.id_order AS id, f.description AS description, f.date_add AS date, (o.total_paid - o.total_shipping) total_without_shipping, f.points, f.id_loyalty, f.id_loyalty_state, fsl.name state
 		FROM `'._DB_PREFIX_.'loyalty` f
 		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (f.id_order = o.id_order)
 		LEFT JOIN `'._DB_PREFIX_.'loyalty_state_lang` fsl ON (f.id_loyalty_state = fsl.id_loyalty_state AND fsl.id_lang = '.(int)($id_lang).')
@@ -236,6 +238,28 @@ class LoyaltyModule extends ObjectModel
 			$associated = true;
 		}
 		return $associated;
+	}
+
+	public static function useLoyalty($points, $id_order, $id_customer)
+	{
+		$points = (int)$points;
+		$loyalty_new = new LoyaltyModule();
+		$loyalty_new->points = (int)(-1 * $points);
+		$loyalty_new->id_loyalty_state = (int)LoyaltyStateModule::getCancelId();
+		// $loyalty_new->id_order = (int)$id_order;
+		$loyalty_new->id_customer = (int)$id_customer;
+		$loyalty_new->save();
+	}
+
+	public static function adjustLoyalty($points, $description, $flag, $id_customer)
+	{
+		$points = (int)$points;
+		$loyalty_new = new LoyaltyModule();
+		$loyalty_new->points = (int)(($flag ? 1 : -1) * $points);
+		$loyalty_new->id_loyalty_state = $flag ? LoyaltyStateModule::getValidationId() : LoyaltyStateModule::getCancelId();
+		$loyalty_new->description = $description;
+		$loyalty_new->id_customer = (int)$id_customer;
+		$loyalty_new->save();
 	}
 
 	public static function getOrdersByIdDiscount($id_cart_rule)

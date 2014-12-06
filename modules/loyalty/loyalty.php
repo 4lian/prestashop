@@ -439,8 +439,8 @@ class Loyalty extends Module
 		$html = '<div class="panel">
 			<div class="panel-heading">'.sprintf($this->l('Loyalty points (%d points)'), $points).'</div>';
 
-		if (!isset($points) || count($details) == 0)
-			return $html.' '.$this->l('This customer has no points');
+		// if (!isset($points) || count($details) == 0)
+		// 	return $html.' '.$this->l('This customer has no points');
 
 		$html .= '
 		<div class="panel-body">
@@ -451,6 +451,7 @@ class Loyalty extends Module
 				<th>'.$this->l('Total (without shipping)').'</th>
 				<th>'.$this->l('Points').'</th>
 				<th>'.$this->l('Points Status').'</th>
+				<th>'.$this->l('描述').'</th>
 			</tr>';
 		foreach ($details as $key => $loyalty)
 		{
@@ -462,6 +463,7 @@ class Loyalty extends Module
 				<td>'.((int)$loyalty['id'] > 0 ? $loyalty['total_without_shipping'] : '--').'</td>
 				<td>'.(int)$loyalty['points'].'</td>
 				<td>'.$loyalty['state'].'</td>
+				<td>'.$loyalty['description'].'</td>
 			</tr>';
 		}
 		$html .= '
@@ -473,8 +475,31 @@ class Loyalty extends Module
 				LoyaltyModule::getVoucherValue((int)$points, (int)Configuration::get('PS_CURRENCY_DEFAULT')),
 				new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'))
 			).'</td>
+				<td></td>
 			</tr>
 		</table>
+		<div class="well hidden-print clearfix" style="width: 400px;">
+			<form action="/admin/index.php?controller=AdminCustomers&amp;id_customer='.$params['id_customer'].'&amp;viewcustomer&amp;token='.Tools::getAdminToken('AdminCustomers'.(int)(Tab::getIdFromClassName('AdminCustomers')).intval($params['cookie']->id_employee)).'" method="post">
+				<div class="form-horizontal">
+					<div class="form-group">
+						<label class="control-label col-lg-3">選擇動作</label>
+						<div class="col-lg-4">
+							<select name="way">
+								<option value="add">增加</option>
+								<option value="subtract">減少</option>
+							</select>
+						</div>
+						<input type="text" name="amount" value="" class="form-control fixed-width-sm pull-right" placeholder="輸入金額">
+					</div>
+					<div class="form-group">
+						<textarea class="textarea-autosize" name="message" style="overflow: hidden; word-wrap: break-word; resize: none; height: 44px;"></textarea>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary pull-right" name="submitAddLoyalty">新增</button>
+					</div>
+				</div>
+			</form>
+		</div>
 		</div>
 		</div>';
 

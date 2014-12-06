@@ -38,14 +38,15 @@
 				<th class="first_item">{l s='Order' mod='loyalty'}</th>
 				<th class="item">{l s='Date' mod='loyalty'}</th>
 				<th class="item">{l s='Points' mod='loyalty'}</th>
-				<th class="last_item">{l s='Points Status' mod='loyalty'}</th>
+				<th class="item">{l s='Points Status' mod='loyalty'}</th>
+				<th class="last_item">{l s='Description'}</th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr class="alternate_item">
 				<td colspan="2" class="history_method bold" style="text-align:center;">{l s='Total points available:' mod='loyalty'}</td>
 				<td class="history_method" style="text-align:left;">{$totalPoints|intval}</td>
-				<td class="history_method">&nbsp;</td>
+				<td colspan="2" class="history_method">&nbsp;</td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -55,6 +56,7 @@
 				<td class="history_date">{dateFormat date=$order.date full=1}</td>
 				<td class="history_method">{$order.points|intval}</td>
 				<td class="history_method">{$order.state|escape:'html':'UTF-8'}</td>
+				<td class="history_method">{$order.description|escape:'html':'UTF-8'}</td>
 			</tr>
 		{/foreach}
 		</tbody>

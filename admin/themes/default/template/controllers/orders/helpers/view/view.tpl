@@ -1068,6 +1068,11 @@
 			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 			 							</tr>
 			 							{/if}
+			 							<tr id="used_loyalty">
+			 								<td class="text-right">{l s='使用的紅利點數'}</td>
+			 								<td class="amount text-right" >{displayPrice price=(-1*$order->used_loyalty) currency=$currency->id}</td>
+			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
+			 							</tr>
 										{assign var=order_total_price value=$order->total_paid_tax_incl}
 										<tr id="total_order">
 											<td class="text-right"><strong>{l s='Total'}</strong></td>
@@ -1101,7 +1106,7 @@
 							<p class="checkbox">
 								<label for="generateDiscount">
 									<input type="checkbox" id="generateDiscount" name="generateDiscount" onclick="toggleShippingCost()" />
-									{l s='Generate a voucher'}
+									{l s='退款金額儲存到點數裡'}
 								</label>
 							</p>
 							<p class="checkbox" id="spanShippingBack" style="display:none;">
@@ -1128,7 +1133,7 @@
 						<p class="checkbox">
 							<label for="generateDiscountRefund">
 								<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost()" />
-								{l s='Generate a voucher'}
+								{l s='退款金額儲存到點數裡'}
 							</label>
 						</p>
 						<button type="submit" name="partialRefund" class="btn btn-default">

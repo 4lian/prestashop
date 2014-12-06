@@ -694,58 +694,8 @@ class AdminOrdersControllerCore extends AdminController
 						// Generate voucher
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
 						{
-							$cart_rule = new CartRule();
-							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
-							$languages = Language::getLanguages(false);
-							foreach ($languages as $language)
-								// Define a temporary name
-								$cart_rule->name[$language['id_lang']] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
-
-							// Define a temporary code
-							$cart_rule->code = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
-							$cart_rule->quantity = 1;
-							$cart_rule->quantity_per_user = 1;
-
-							// Specific to the customer
-							$cart_rule->id_customer = $order->id_customer;
-							$now = time();
-							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
-							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
-							$cart_rule->partial_use = 1;
-							$cart_rule->active = 1;
-
-							$cart_rule->reduction_amount = $amount;
-							$cart_rule->reduction_tax = true;
-							$cart_rule->minimum_amount_currency = $order->id_currency;
-							$cart_rule->reduction_currency = $order->id_currency;
-
-							if (!$cart_rule->add())
-								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-							else
-							{
-								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cart_rule->name[$language['id_lang']] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
-								$cart_rule->code = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
-
-								if (!$cart_rule->update())
-									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-								else
-								{
-									$currency = $this->context->currency;
-									$customer = new Customer((int)($order->id_customer));
-									$params['{lastname}'] = $customer->lastname;
-									$params['{firstname}'] = $customer->firstname;
-									$params['{id_order}'] = $order->id;
-									$params['{order_name}'] = $order->getUniqReference();
-									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
-									$params['{voucher_num}'] = $cart_rule->code;
-									$customer = new Customer((int)$order->id_customer);
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
-										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
-								}
-							}
+							$customer = new Customer((int)($order->id_customer));
+							$this->refundToLoyalty($amount, $order, $customer);
 						}
 					}
 					else
@@ -922,15 +872,6 @@ class AdminOrdersControllerCore extends AdminController
 								$total += $order->total_shipping;
 
 							$this->refundToLoyalty($total, $order, $customer);
-							include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
-							include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
-							LoyaltyModule::adjustLoyalty($total, sprintf($this->l('Credit card slip for order #%d'), $order->id), true, $order->id_customer);
-
-							$currency = $this->context->currency;
-							$params['{loyalty_amount}'] = Tools::displayPrice($total, $currency, false);
-							@Mail::Send((int)$order->id_lang, 'loyalty', sprintf(Mail::l('已將訂單編號#%s的退款儲存到您的點數裡', (int)$order->id_lang), $order->reference),
-							$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-							null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 						}
 					}
 					else
@@ -2524,7 +2465,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
 		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
-		LoyaltyModule::adjustLoyalty($total, sprintf($this->l('Credit card slip for order #%d'), $order->id), true, $order->id_customer);
+		LoyaltyModule::adjustLoyalty($total, sprintf($this->l('訂單 #%d 的退款'), $order->id), true, $order->id_customer);
 
 		$currency = $this->context->currency;
 		$params['{loyalty_amount}'] = Tools::displayPrice($total, $currency, false);

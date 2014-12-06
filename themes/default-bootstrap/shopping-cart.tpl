@@ -424,6 +424,23 @@
 					{include file="$tpl_dir./shopping-cart-product-line.tpl" productLast=$product@last productFirst=$product@first}
 				{/foreach}
 			</tbody>
+			<tbody>
+				<tr class="cart_discount">
+					<td class="cart_discount_name" colspan="{if $PS_STOCK_MANAGEMENT}5{else}4{/if}">
+						<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
+						你全部餘額是: {$total_loyalty}可使用: {$total_loyalty-$used_loyalty} 請問你還要使用多少:<input type="text" class="used_loyalty" id="used_loyalty" name="used_loyalty" />
+						<button type="submit" name="submitAddUsedLoyalty" class="button btn btn-default button-small">
+							<span>{l s='OK'}</span>
+						</button>
+						</form>
+					</td>
+					<td class="cart_discount_price">
+						{displayPrice price=$used_loyalty*-1}
+					</td>
+					<td class="price_discount_del text-center">
+					</td>
+				</tr>
+			</tbody>
 			{if sizeof($discounts)}
 				<tbody>
 					{foreach $discounts as $discount}

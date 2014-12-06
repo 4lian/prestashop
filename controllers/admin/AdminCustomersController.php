@@ -275,6 +275,19 @@ class AdminCustomersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		elseif (Tools::isSubmit('submitAddLoyalty'))
+		{
+			if (!Validate::isUnsignedInt(Tools::getValue('amount'))) {
+				$this->errors[] = Tools::displayError('Enter loyalty point is invalid');
+			}
+			else {
+				
+				include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
+				include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
+				LoyaltyModule::adjustLoyalty(Tools::getValue('amount'), Tools::getValue('message'), (Tools::getValue('way') == 'add'), Tools::getValue('id_customer'));
+			}
+		}
+		
 
 		// When deleting, first display a form to select the type of deletion
 		if ($this->action == 'delete' || $this->action == 'bulkdelete')

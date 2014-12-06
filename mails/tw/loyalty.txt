@@ -1,0 +1,12 @@
+
+[{shop_url}] 
+
+{lastname} {firstname} 您好, 
+
+訂單編號{order_name}退款已完成
+
+您的訂單編號{order_name}已退款，已將您的退款金額{loyalty_amount}儲存到點數裡，您可在下次消費時使用。
+
+{shop_name} [{shop_url}] powered by
+PrestaShop(tm) [http://www.prestashop.com/] 
+

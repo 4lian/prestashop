@@ -130,6 +130,8 @@ class OrderCore extends ObjectModel
 	/** @var float Wrapping total tax excluded */
 	public $total_wrapping_tax_excl;
 
+	public $used_loyalty;
+
 	/** @var integer Invoice number */
 	public $invoice_number;
 
@@ -196,6 +198,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'used_loyalty' =>	            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),

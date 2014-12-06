@@ -320,6 +320,8 @@ abstract class PaymentModuleCore extends Module
 					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
 					$order->total_paid = $order->total_paid_tax_incl;
 
+					$order->used_loyalty = $this->context->cart->used_loyalty;
+
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
 
@@ -328,6 +330,8 @@ abstract class PaymentModuleCore extends Module
 			
 					// Creating order
 					$result = $order->add();
+
+					LoyaltyModule::useLoyalty($this->context->cart->used_loyalty, $order->id, (int)$this->context->cart->id_customer);
 
 					if (!$result)
 					{

@@ -129,6 +129,32 @@ class ParentOrderControllerCore extends FrontController
 					$this->context->cart->removeCartRule($id_cart_rule);
 					Tools::redirect('index.php?controller=order-opc');
 				}
+				elseif (Tools::isSubmit('submitAddUsedLoyalty'))
+				{
+					if (!($used_loyalty = trim(Tools::getValue('used_loyalty'))))
+						$this->errors[] = Tools::displayError('You must enter a loyalty value.');
+					elseif (!Validate::isUnsignedInt($used_loyalty))
+						$this->errors[] = Tools::displayError('The loyalty value is invalid.');
+					else
+					{
+						$customer_points = (int)LoyaltyModule::getPointsByCustomer((int)Context::getContext()->customer->id);
+						$total_loyalty = LoyaltyModule::getVoucherValue($customer_points, (int)Context::getContext()->currency->id);
+						if ($total_loyalty <= 0)
+							$this->errors[] = Tools::displayError('Your loyalty point is zero.');
+						elseif ($total_loyalty < $used_loyalty) 
+							$this->errors[] = Tools::displayError('You enter a value greater than the loyalty value you have.');
+						else {
+							$this->context->cart->updateUseLoyalty($used_loyalty);
+							if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+								Tools::redirect('index.php?controller=order-opc&addingCartRule=1');
+							Tools::redirect('index.php?controller=order&addingCartRule=1');
+						}
+					}
+					$this->context->smarty->assign(array(
+						'errors' => $this->errors,
+						'used_loyalty' => Tools::safeOutput($used_loyalty)
+					));
+				}
 			}
 			/* Is there only virtual product in cart */
 			if ($isVirtualCart = $this->context->cart->isVirtualCart())
