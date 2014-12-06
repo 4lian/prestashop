@@ -272,7 +272,7 @@
 								--
 							{else}
 								{if $params.type == 'bool'}
-									<select class="filter fixed-width-sm" name="{$list_id}Filter_{$key}">
+									<select class="filter {if !isset($params.not_fix_width) || !$params.not_fix_width}fixed-width-sm{/if}" name="{$list_id}Filter_{$key}">
 										<option value="">-</option>
 										<option value="1" {if $params.value == 1} selected="selected" {/if}>{l s='Yes'}</option>
 										<option value="0" {if $params.value == 0 && $params.value != ''} selected="selected" {/if}>{l s='No'}</option>

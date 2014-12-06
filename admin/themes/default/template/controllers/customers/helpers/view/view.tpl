@@ -55,6 +55,12 @@
 						</div>
 					</div>
 					<div class="row">
+						<label class="control-label col-lg-3">{l s='Username'}</label>
+						<div class="col-lg-9">
+							<p class="form-control-static">{if $customer->username}{$customer->username}{else}{l s='Unknown'}{/if}</p>
+						</div>
+					</div>
+					<div class="row">
 						<label class="control-label col-lg-3">{l s='Age'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">

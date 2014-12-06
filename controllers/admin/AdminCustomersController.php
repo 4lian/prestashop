@@ -102,6 +102,9 @@ class AdminCustomersControllerCore extends AdminController
 			'email' => array(
 				'title' => $this->l('Email address')
 			),
+			'username' => array(
+				'title' => $this->l('Username')
+			),
 		);
 
 		if (Configuration::get('PS_B2B_ENABLE'))
@@ -128,6 +131,7 @@ class AdminCustomersControllerCore extends AdminController
 				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
+				'not_fix_width' => true,
 				'filter_key' => 'a!active'
 			),
 			'newsletter' => array(
@@ -135,6 +139,7 @@ class AdminCustomersControllerCore extends AdminController
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
+				'not_fix_width' => true,
 				'orderby' => false
 			),
 			'optin' => array(
@@ -142,6 +147,7 @@ class AdminCustomersControllerCore extends AdminController
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
+				'not_fix_width' => true,
 				'orderby' => false
 			),
 			'date_add' => array(
@@ -365,6 +371,14 @@ class AdminCustomersControllerCore extends AdminController
 					'name' => 'email',
 					'col' => '4',
 					'required' => true,
+					'autocomplete' => false
+				),
+				array(
+					'type' => 'text',
+					'prefix' => '<i class="icon-envelope-o"></i>',
+					'label' => $this->l('Username'),
+					'name' => 'username',
+					'col' => '4',
 					'autocomplete' => false
 				),
 				array(
