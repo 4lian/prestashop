@@ -910,25 +910,7 @@ class AdminOrdersControllerCore extends AdminController
 						// Generate voucher
 						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
 						{
-							$cartrule = new CartRule();
 							$languages = Language::getLanguages($order);
-							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
-							foreach ($languages as $language)
-							{
-								// Define a temporary name
-								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
-							}
-							// Define a temporary code
-							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
-
-							$cartrule->quantity = 1;
-							$cartrule->quantity_per_user = 1;
-							// Specific to the customer
-							$cartrule->id_customer = $order->id_customer;
-							$now = time();
-							$cartrule->date_from = date('Y-m-d H:i:s', $now);
-							$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
-							$cartrule->active = 1;
 
 							$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
 
@@ -939,31 +921,16 @@ class AdminOrdersControllerCore extends AdminController
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
 
-							$cartrule->reduction_amount = $total;
-							$cartrule->reduction_tax = true;
-							$cartrule->minimum_amount_currency = $order->id_currency;
-							$cartrule->reduction_currency = $order->id_currency;
+							$this->refundToLoyalty($total, $order, $customer);
+							include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
+							include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
+							LoyaltyModule::adjustLoyalty($total, sprintf($this->l('Credit card slip for order #%d'), $order->id), true, $order->id_customer);
 
-							if (!$cartrule->add())
-								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-							else
-							{
-								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cartrule->name[$language['id_lang']] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
-								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
-								if (!$cartrule->update())
-									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-								else
-								{
-									$currency = $this->context->currency;
-									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
-									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
-									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
-								}
-							}
+							$currency = $this->context->currency;
+							$params['{loyalty_amount}'] = Tools::displayPrice($total, $currency, false);
+							@Mail::Send((int)$order->id_lang, 'loyalty', sprintf(Mail::l('已將訂單編號#%s的退款儲存到您的點數裡', (int)$order->id_lang), $order->reference),
+							$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
+							null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 						}
 					}
 					else
@@ -2551,5 +2518,18 @@ class AdminOrdersControllerCore extends AdminController
 		$order_invoice->total_paid_tax_incl -= $value_tax_incl;
 		$order_invoice->total_paid_tax_excl -= $value_tax_excl;
 		$order_invoice->update();
+	}
+
+	public function refundToLoyalty($total, $order, $customer) 
+	{
+		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyModule.php');
+		include_once(_PS_MODULE_DIR_.'loyalty/LoyaltyStateModule.php');
+		LoyaltyModule::adjustLoyalty($total, sprintf($this->l('Credit card slip for order #%d'), $order->id), true, $order->id_customer);
+
+		$currency = $this->context->currency;
+		$params['{loyalty_amount}'] = Tools::displayPrice($total, $currency, false);
+		@Mail::Send((int)$order->id_lang, 'loyalty', sprintf(Mail::l('已將訂單編號#%s的退款儲存到您的點數裡', (int)$order->id_lang), $order->reference),
+		$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
+		null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 	}
 }
