@@ -155,7 +155,9 @@ class LoyaltyModule extends ObjectModel
 
 	public static function getPointsByCustomer($id_customer)
 	{
-
+		if ($id_customer == 0) {
+			return 0;
+		}
 		$validity_period = Configuration::get('PS_LOYALTY_VALIDITY_PERIOD');
 		$sql_period = '';
 		if ((int)$validity_period > 0)
