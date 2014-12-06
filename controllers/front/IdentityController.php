@@ -48,6 +48,7 @@ class IdentityControllerCore extends FrontController
 		if (Tools::isSubmit('submitIdentity'))
 		{
 			$email = trim(Tools::getValue('email'));
+			$username = trim(Tools::getValue('username'));
 
 			if (Tools::getValue('months') != '' && Tools::getValue('days') != '' && Tools::getValue('years') != '')
 				$this->customer->birthday = (int)(Tools::getValue('years')).'-'.(int)(Tools::getValue('months')).'-'.(int)(Tools::getValue('days'));
@@ -63,6 +64,10 @@ class IdentityControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('This email address is not valid');
 			elseif ($this->customer->email != $email && Customer::customerExists($email, true))
 				$this->errors[] = Tools::displayError('An account using this email address has already been registered.');
+			elseif (!Validate::isGenericName($username))
+				$this->errors[] = Tools::displayError('This Username is not valid');
+			elseif ($this->customer->username != $username && Customer::usernameExists($username))
+				$this->context->controller->errors[] = Tools::displayError('Your username has been taken.', false);
 			elseif (!Tools::getIsset('old_passwd') || (Tools::encrypt($old_passwd) != $this->context->cookie->passwd))
 				$this->errors[] = Tools::displayError('The password you entered is incorrect.');
 			elseif (Tools::getValue('passwd') != Tools::getValue('confirmation'))

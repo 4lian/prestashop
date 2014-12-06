@@ -79,7 +79,7 @@
 				<div class="form_content clearfix">
 					<div class="form-group">
 						<label for="email">{l s='Email address'}</label>
-						<input class="is_required validate account_input form-control" data-validate="isEmail" type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" />
+						<input class="is_required validate account_input form-control" data-validate="isGenericName" type="text" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|stripslashes}{/if}" />
 					</div>
 					<div class="form-group">
 						<label for="passwd">{l s='Password'}</label>
@@ -441,6 +441,10 @@
 			<div class="required form-group">
 				<label for="email">{l s='Email'} <sup>*</sup></label>
 				<input type="text" class="is_required validate form-control" data-validate="isEmail" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email}{/if}" />
+			</div>
+			<div class="required form-group">
+				<label for="username">{l s='Username'} <sup>*</sup></label>
+				<input type="text" class="is_required validate form-control" data-validate="isGenericName" id="username" name="username" value="{if isset($smarty.post.username)}{$smarty.post.username}{/if}" />
 			</div>
 			<div class="required password form-group">
 				<label for="passwd">{l s='Password'} <sup>*</sup></label>

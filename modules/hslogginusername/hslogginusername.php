@@ -67,7 +67,7 @@ class HsLogginUsername extends Module
 
 	public function hookDisplayCustomerAccountForm()
 	{
-		return $this->display(__FILE__, 'display_customer_account_form.tpl');
+		return "";
 	}
 
 	/**

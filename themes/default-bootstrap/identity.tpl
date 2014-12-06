@@ -84,6 +84,10 @@
                     </label>
                     <input class="is_required validate form-control" data-validate="isEmail" type="email" name="email" id="email" value="{$smarty.post.email}" />
                 </div>
+                <div class="required form-group">
+                    <label for="username">{l s='Username'} <sup>*</sup></label>
+                    <input type="text" class="is_required validate form-control" data-validate="isGenericName" id="username" name="username" value="{if isset($smarty.post.username)}{$smarty.post.username}{/if}" />
+                </div>
                 <div class="form-group">
                     <label>
                         {l s='Date of Birth'}

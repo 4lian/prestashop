@@ -63,6 +63,10 @@
 					<label for="email">{l s='Email'} <sup>*</sup></label>
 					<input type="text" class="text form-control validate" id="email" name="email" data-validate="isEmail" value="{if isset($guestInformations) && isset($guestInformations.email) && $guestInformations.email}{$guestInformations.email}{/if}" />
 				</div>
+				<div class="required form-group">
+					<label for="username">{l s='Username'} <sup>*</sup></label>
+					<input type="text" class="is_required validate form-control" data-validate="isGenericName" id="username" name="username" value="{if isset($smarty.post.username)}{$smarty.post.username}{/if}" />
+				</div>
 				<div class="required password is_customer_param form-group">
 					<label for="passwd">{l s='Password'} <sup>*</sup></label>
 					<input type="password" class="text form-control validate" name="passwd" id="passwd" data-validate="isPasswd" />

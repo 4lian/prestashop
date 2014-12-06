@@ -140,7 +140,7 @@ class ParentOrderControllerCore extends FrontController
 						$customer_points = (int)LoyaltyModule::getPointsByCustomer((int)Context::getContext()->customer->id);
 						$total_loyalty = LoyaltyModule::getVoucherValue($customer_points, (int)Context::getContext()->currency->id);
 						if ($total_loyalty <= 0)
-							$this->errors[] = Tools::displayError('Your loyalty point is zero.');
+							$this->errors[] = Tools::displayError('Your loyalty point is less than zero.');
 						elseif ($total_loyalty < $used_loyalty) 
 							$this->errors[] = Tools::displayError('You enter a value greater than the loyalty value you have.');
 						else {
