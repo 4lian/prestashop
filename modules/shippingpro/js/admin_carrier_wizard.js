@@ -83,18 +83,29 @@ function initCarrierWizard()
 
 function displayRangeType()
 {
-	if ($('input[name="shipping_method"]:checked').val() == 1)
-	{
-		string = string_weight;
-		$('.weight_unit').show();
-		$('.price_unit').hide();
+	var shipping_method = parseInt($('input[name="shipping_method"]:checked').val());
+	switch (shipping_method) {
+		case 1:
+			string = string_weight;
+			$('.weight_unit').show();
+			$('.price_unit').hide();
+			$('.price_quantity').hide();
+			break;
+		case 2:
+			string = string_price;
+			$('.weight_unit').hide();
+			$('.price_unit').show();
+			$('.price_quantity').hide();
+			break;
+		case 4:
+			string = string_quantity;
+			$('.weight_unit').hide();
+			$('.price_unit').hide();
+			$('.price_quantity').show();
+			break;
+		default:
 	}
-	else
-	{
-		string = string_price;
-		$('.price_unit').show();
-		$('.weight_unit').hide();
-	}
+
 	is_freeClick($('input[name="is_free"]:checked'));
 	$('.range_type').html(string);
 }
@@ -386,21 +397,8 @@ function bind_inputs()
 	});
 		
 	$('input[name="shipping_method"]').off('click').on('click', function() {
-		$.ajax({
-			type:"POST",
-			url : validate_url,
-			async: false,
-			dataType: 'html',
-			data : 'id_carrier='+parseInt($('#id_carrier').val())+'&shipping_method='+parseInt($(this).val())+'&action=changeRanges&ajax=1',
-			success : function(data) {
-				$('#zone_ranges').replaceWith(data);
-				displayRangeType();
-				bind_inputs();
-			},
-			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
-			}
-		});
+		displayRangeType();
+		bind_inputs();
 	});
 	
 	$('#zones_table td input[type=text]').off('change').on('change', function () {
@@ -532,8 +530,7 @@ function disableZone(index)
 function enableRange(index)
 {
 	$('tr.fees').each(function () {
-		//only enable fees for enabled zones
-		if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
+		// if ($(this).find('td').find('input:checkbox').attr('checked') == 'checked')
 			enableZone(index);
 	});
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');

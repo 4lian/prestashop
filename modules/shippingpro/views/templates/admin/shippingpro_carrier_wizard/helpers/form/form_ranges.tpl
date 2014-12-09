@@ -11,7 +11,8 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<input class="form-control" name="range_inf[{$range.id_range|intval}]" type="text" value="{$range.delimiter1|string_format:"%.6f"}" />
+								<span class="input-group-addon price_quantity">item</span>
+								<input class="form-control" name="range_inf[]" type="text" value="{$range.lower|string_format:"%.6f"}" />
 							</div>
 						</td>
 						{foreachelse}
@@ -19,7 +20,8 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<input name="form-control range_inf[{$range.id_range|intval}]" type="text" />
+								<span class="input-group-addon price_quantity">item</span>
+								<input name="form-control range_inf[]" type="text" />
 							</div>
 						</td>
 						{/foreach}
@@ -32,7 +34,8 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<input class="form-control" name="range_sup[{$range.id_range|intval}]" type="text" {if isset($form_id) && !$form_id} value="" {else} value="{if isset($change_ranges) && $range.id_range == 0} {else}{$range.delimiter2|string_format:"%.6f"}{/if}" {/if}/>
+								<span class="input-group-addon price_quantity">item</span>
+								<input class="form-control" name="range_sup[]" type="text" value="{$range.upper|string_format:"%.6f"}" />
 							</div>
 						</td>
 						{foreachelse}
@@ -40,23 +43,24 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<input class="form-control" name="range_sup[{$range.id_range|intval}]" type="text" />
+								<span class="input-group-addon price_quantity">item</span>
+								<input class="form-control" name="range_sup[]" type="text" />
 							</div>
 						</td>
 						{/foreach}
 					</tr>
-					<tr class="fees_all">
+					<tr class="fees_all" style="display:none;">
 						<td class="border_top border_bottom border_bold">
-							<span class="fees_all" {if $ranges|count == 0}style="display:none" {/if}>All</span>
+							<span class="fees_all">All</span>
 						</td>
 						<td style="">
 							<input type="checkbox" onclick="checkAllZones(this);" class="form-control">
 						</td>
 						{foreach from=$ranges key=r item=range}
-						<td class="border_top border_bottom {if $range.id_range != 0} validated {/if}"  >
+						<td class="border_top border_bottom" >
 							<div class="input-group fixed-width-md">
-								<span class="input-group-addon currency_sign" {if $range.id_range == 0} style="display:none" {/if}>{$currency_sign}</span>
-								<input class="form-control" type="text" {if isset($form_id) &&  !$form_id} disabled="disabled"{/if} {if $range.id_range == 0} style="display:none"{/if} />
+								<span class="input-group-addon currency_sign">{$currency_sign}</span>
+								<input class="form-control" type="text"/>
 							</div>
 						</td>
 						{foreachelse}
@@ -68,27 +72,29 @@
 						</td>
 						{/foreach}
 					</tr>
-					{foreach from=$zones key=i item=zone}
-					<tr class="fees" data-zoneid="{$zone.id_zone}">
+					<tr class="fees">
 						<td>
-							<label for="zone_{$zone.id_zone}">{$zone.name}</label>
+							
 						</td>
 						<td class="zone">
-							<input class="form-control input_zone" id="zone_{$zone.id_zone}" name="zone_{$zone.id_zone}" value="1" type="checkbox" {if isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} checked="checked"{/if}/>
+							<input class="form-control input_zone" value="1" type="checkbox" checked="checked" style="display:none;"/>
 						</td>
 						{foreach from=$ranges key=r item=range}
 						<td>
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon">{$currency_sign}</span>
-								<input class="form-control" name="fees[{$zone.id_zone|intval}][{$range.id_range|intval}]" type="text" 
-								{if !isset($fields_value['zones'][$zone.id_zone]) || (isset($fields_value['zones'][$zone.id_zone]) && !$fields_value['zones'][$zone.id_zone])} disabled="disabled"{/if} 
-								
-								{if isset($price_by_range[$range.id_range][$zone.id_zone]) && $price_by_range[$range.id_range][$zone.id_zone] && isset($fields_value['zones'][$zone.id_zone]) && $fields_value['zones'][$zone.id_zone]} value="{$price_by_range[$range.id_range][$zone.id_zone]|string_format:'%.6f'}" {else} value="" {/if} />
+								<input class="form-control" name="fees[]" type="text"  value="{$range.price|string_format:"%.6f"}" />
+							</div>
+						</td>
+						{foreachelse}
+						<td>
+							<div class="input-group fixed-width-md">
+								<span class="input-group-addon">{$currency_sign}</span>
+								<input class="form-control" name="fees[]" type="text" />
 							</div>
 						</td>
 						{/foreach}
 					</tr>
-					{/foreach}
 					<tr class="delete_range">
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>

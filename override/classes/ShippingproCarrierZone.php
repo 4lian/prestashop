@@ -1,6 +1,6 @@
 <?php
 
-class ShippingproCarrier extends ObjectModel
+class ShippingproCarrierZone extends ObjectModel
 {
 	/**
 	 * getCarriers method filter
@@ -15,7 +15,6 @@ class ShippingproCarrier extends ObjectModel
 	const SHIPPING_METHOD_WEIGHT = 1;
 	const SHIPPING_METHOD_PRICE = 2;
 	const SHIPPING_METHOD_FREE = 3;
-	const SHIPPING_METHOD_QUANTITY = 4;
 
 	const SORT_BY_PRICE = 0;
 	const SORT_BY_POSITION = 1;
@@ -23,47 +22,65 @@ class ShippingproCarrier extends ObjectModel
 	const SORT_BY_ASC = 0;
 	const SORT_BY_DESC = 1;
 
-	/** @var int common id for carrier historization */
-	public $id_reference;
+	public $id_shippingpro_carrier;
 
- 	/** @var string Name */
-	public $name;
+	public $id_zone;
 
- 	/** @var string URL with a '@' for */
-	public $url;
+	public $id_country;
 
-	/** @var boolean Carrier statuts */
-	public $active = true;
+	public $zip_code_min;
 
-	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
-	public $deleted = 0;
+	public $zip_code_max;
 
-	/** @var int Position */
-	public $position;
+	public $id_tax_rules_group;
 
-	/** @var int grade of the shipping delay (0 for longest, 9 for shortest) */
-	public $grade;
+	public $shipping_handling;
+
+	public $handling_fee;
+
+	public $range_behavior;
+
+	public $shipping_method;
+
+	public $max_width;
+
+	public $max_height;
+
+	public $max_depth;
+
+	public $max_weight;
+
+	public $rule;
+
+	public $description;
+
 
 	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
-		'table' => 'shippingpro_carrier',
+		'table' => 'shippingpro_carrier_zone',
 		'primary' => 'id_shippingpro_carrier',
 		'multilang' => true,
 		'multilang_shop' => true,
 		'fields' => array(
-			/* Classic fields */
-			'id_reference' => 			array('type' => self::TYPE_INT),
-			'name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCarrierName', 'required' => true, 'size' => 64),
-			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-			'url' => 					array('type' => self::TYPE_STRING, 'validate' => 'isAbsoluteUrl'),
-			'grade' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 1),
-			'position' => 				array('type' => self::TYPE_INT),
-			'deleted' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-
-			/* Lang fields */
-			'delay' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+			'id_shippingpro_carrier_zone' => array('type' => self::TYPE_INT),
+			'id_shippingpro_carrier' => array('type' => self::TYPE_INT),
+			'id_zone' => 				array('type' => self::TYPE_INT),
+			'id_country' => 			array('type' => self::TYPE_INT),
+			'zip_code_min' => 			array('type' => self::TYPE_INT),
+			'zip_code_max' => 			array('type' => self::TYPE_INT),
+			'id_tax_rules_group' => 	array('type' => self::TYPE_INT),
+			'shipping_handling' => 		array('type' => self::TYPE_INT),
+			'handling_fee' => 			array('type' => self::TYPE_INT),
+			'range_behavior' => 		array('type' => self::TYPE_INT),
+			'shipping_method' => 		array('type' => self::TYPE_INT),
+			'max_width' => 				array('type' => self::TYPE_INT),
+			'max_height' => 			array('type' => self::TYPE_INT),
+			'max_depth' => 				array('type' => self::TYPE_INT),
+			'max_weight' => 			array('type' => self::TYPE_FLOAT),
+			'rule' => 					array('type' => self::TYPE_STRING),
+			'description' => 			array('type' => self::TYPE_STRING),
 		),
 	);
 
@@ -97,9 +114,6 @@ class ShippingproCarrier extends ObjectModel
 		 */
 		if ($this->id)
 			$this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
-		if ($this->name == '0')
-			$this->name = Configuration::get('PS_SHOP_NAME');
-		$this->image_dir = _PS_SHIP_IMG_DIR_;
 	}
 
 	public function add($autodate = true, $null_values = false)
@@ -1221,19 +1235,5 @@ class ShippingproCarrier extends ObjectModel
 				$sql .= '('.(int)$this->id.', '.(int)$id_group.'),';
 
 		return Db::getInstance()->execute(rtrim($sql, ','));
-	}
-
-	public function getZoneDetail()
-	{
-		$cache_id = 'ShippingproCarrier::getZoneDetail_'.(int)$this->id;
-		if (!Cache::isStored($cache_id))
-		{
-			$sql = 'SELECT *
-					FROM `'._DB_PREFIX_.'shippingpro_carrier_zone` cz
-					WHERE cz.`id_shippingpro_carrier` = '.(int)$this->id;
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-			Cache::store($cache_id, $result);
-		}
-		return Cache::retrieve($cache_id);
 	}
 }

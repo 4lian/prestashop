@@ -65,14 +65,6 @@ class AdminShippingproCarriersController extends ModuleAdminController
 				'class' => 'fixed-width-sm',
 				'orderby' => false,
 			),
-			'is_free' => array(
-				'title' => $this->l('Free Shipping'),
-				'align' => 'center',
-				'active' => 'isFree',
-				'type' => 'bool',
-				'class' => 'fixed-width-sm',
-				'orderby' => false,
-			),
 			'position' => array(
 				'title' => $this->l('Position'),
 				'filter_key' => 'a!position',
