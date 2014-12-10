@@ -235,9 +235,25 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 
 	public function renderStepThree($carrier)
 	{
+		$rules = $carrier->getZoneRules();
+		$context = '';
+		if (empty($rules)) {
+			$context .= $this->renderRuleView(null, 0);
+		}
+		else {
+			foreach ($rules as $key => $rule) {
+				$context .= $this->renderRuleView($rule, $key);
+			}
+		}
+
+		return $context;
+	}
+
+	public function renderRuleView($rule, $index)
+	{
 		$this->fields_form = array(
 			'form' => array(
-				'id_form' => 'step_carrier_ranges',
+				'id_form' => 'step_carrier_ranges_'.$index,
 				'input' => array(
 					array(
 						'type' => 'select',
@@ -270,14 +286,14 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 					array(
 						'type' => 'text',
 						'label' => $this->l('Min zip code'),
-						'name' => 'min_zip_code',
+						'name' => 'zip_code_min',
 						'required' => false,
 						'hint' => $this->l('Min zip code')
 					),
 					array(
 						'type' => 'text',
 						'label' => $this->l('Max zip code'),
-						'name' => 'max_zip_code',
+						'name' => 'zip_code_max',
 						'required' => false,
 						'hint' => $this->l('Max zip code')
 					),
@@ -402,37 +418,35 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		$tpl_vars['currency_sign'] = $currency->sign;
 
-		$fields_value = array();
+		$fields_value = $rule;
 
-// $ranges = array(
-// 	array(
-// 		'lower' => 0,
-// 		'upper' => 2,
-// 		'price' => 100,
-// 		),
-// 	array(
-// 		'lower' => 2,
-// 		'upper' => 5,
-// 		'price' => 200,
-// 		),
-// 	array(
-// 		'lower' => 5,
-// 		'upper' => 20,
-// 		'price' => 1000,
-// 		),
-// 	array(
-// 		'lower' => 20,
-// 		'upper' => 9999,
-// 		'price' => 2100,
-// 		),
-// 	);
-$ranges = array();
-$tpl_vars['ranges'] = $ranges;
-$fields_value['shipping_method'] = ShippingproCarrier::SHIPPING_METHOD_PRICE;
-
-		// $carrier->getZoneDetail();
+		$ranges = array();
+		$tpl_vars['ranges'] = $rule['ranges'];
 
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
+	}
+
+	public function getRuleFieldsValues($rule)
+	{
+		$id_tax_rules_group = (is_object($this->object) && !$this->object->id) ? Carrier::getIdTaxRulesGroupMostUsed() : $this->getFieldValue($rule, 'id_tax_rules_group');
+
+		$shipping_handling = (is_object($this->object) && !$this->object->id) ? 0 : $this->getFieldValue($rule, 'shipping_handling');
+
+		return array(
+			// 'is_free' => $this->getFieldValue($rule, 'is_free'),
+			'id_tax_rules_group' => (int)$id_tax_rules_group,
+			'shipping_handling' => $shipping_handling,
+			'shipping_method' => $this->getFieldValue($rule, 'shipping_method'),
+			'id_zone' =>  $this->getFieldValue($rule, 'id_zone'),
+			'id_country' =>  $this->getFieldValue($rule, 'id_country'),
+			'min_zip_code' =>  $this->getFieldValue($rule, 'min_zip_code'),
+			'max_zip_code' =>  $this->getFieldValue($rule, 'max_zip_code'),
+			'max_height' =>  $this->getFieldValue($rule, 'max_height'),
+			'max_width' =>  $this->getFieldValue($rule, 'max_width'),
+			'max_depth' =>  $this->getFieldValue($rule, 'max_depth'),
+			'max_weight' =>  $this->getFieldValue($rule, 'max_weight'),
+			'range_behavior' =>  $this->getFieldValue($rule, 'range_behavior'),
+		);
 	}
 
 	public function renderStepFour($carrier)

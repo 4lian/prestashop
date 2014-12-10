@@ -1223,15 +1223,23 @@ class ShippingproCarrier extends ObjectModel
 		return Db::getInstance()->execute(rtrim($sql, ','));
 	}
 
-	public function getZoneDetail()
+	public function getZoneRules()
 	{
 		$cache_id = 'ShippingproCarrier::getZoneDetail_'.(int)$this->id;
-		if (!Cache::isStored($cache_id))
+		// if (!Cache::isStored($cache_id))
+		if (true)
 		{
 			$sql = 'SELECT *
 					FROM `'._DB_PREFIX_.'shippingpro_carrier_zone` cz
 					WHERE cz.`id_shippingpro_carrier` = '.(int)$this->id;
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+			foreach ($result as $row) {
+				if (is_null($row['ranges'])) 
+					$row['ranges'] = array();
+				else 
+					$row['ranges'] = serialize($row['ranges']);
+			}
+			return $result;
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);

@@ -23,11 +23,6 @@
 *	International Registered Trademark & Property of PrestaShop SA
 *}
 {extends file="helpers/form/form.tpl"}
-{block name="script"}
-	var string_price = '{l s='Will be applied when the price is' js=1}';
-	var string_weight = '{l s='Will be applied when the weight is' js=1}';
-	var string_quantity = '{l s='Will be applied when the quantity is' js=1}';
-{/block}
 
 {block name="field"}
 	{if $input.name == 'zones'}

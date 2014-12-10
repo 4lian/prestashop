@@ -43,6 +43,9 @@
 	var overlapping_range = '{l s='Ranges are overlapping' js=1}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
 	var multistore_enable = '{$multistore_enable}';
+	var string_price = '{l s='Will be applied when the price is' js=1}';
+	var string_weight = '{l s='Will be applied when the weight is' js=1}';
+	var string_quantity = '{l s='Will be applied when the quantity is' js=1}';
 </script>
 
 <div class="row">
