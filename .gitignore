@@ -2,3 +2,6 @@
 cache/*
 img/tmp/*
 !index.php
+
+modules/shopgate/vendors/shopgate_library/temp/cache/*
+log/*
