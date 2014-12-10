@@ -326,12 +326,11 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 						'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
-						'type' => 'switch',
+						'type' => 'radio',
 						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
-						'is_bool' => true,
 						'values' => array(
 							array(
 								'id' => 'shipping_handling_on',
@@ -345,6 +344,25 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 							)
 						),
 						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Free shipping'),
+						'name' => 'is_free',
+						'required' => false,
+						'class' => 't',
+						'values' => array(
+							array(
+								'id' => 'is_free_on',
+								'value' => 1,
+								'label' => $this->l('Yes')
+							),
+							array(
+								'id' => 'is_free_off',
+								'value' => 0,
+								'label' => $this->l('No')
+							)
+						)
 					),
 					array(
 						'type' => 'radio',
@@ -420,8 +438,7 @@ class AdminShippingproCarrierWizardController extends ModuleAdminController
 
 		$fields_value = $rule;
 
-		$ranges = array();
-		$tpl_vars['ranges'] = $rule['ranges'];
+		$tpl_vars['ranges'] = unserialize($rule['ranges']);
 
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}

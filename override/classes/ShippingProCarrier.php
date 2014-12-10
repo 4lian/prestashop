@@ -1237,7 +1237,7 @@ class ShippingproCarrier extends ObjectModel
 				if (is_null($row['ranges'])) 
 					$row['ranges'] = array();
 				else 
-					$row['ranges'] = serialize($row['ranges']);
+					$row['ranges'] = unserialize($row['ranges']);
 			}
 			return $result;
 			Cache::store($cache_id, $result);
