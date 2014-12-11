@@ -1,5 +1,4 @@
-<?php
-/*
+{*
 * 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -22,35 +21,28 @@
 *  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
+*}
+{extends file="helpers/form/form.tpl"}
 
-if (!defined('_PS_VERSION_'))
-	exit;
+{block name=script}
+	// At the loading
+	($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();
 
-class ShippingproType extends ObjectModel
-{
-	public $name;
+	$("input[name='is_free']").live('change', function() {ldelim}
+		($("input[name='is_free']:checked").val() == 0) ? $('#shipping_costs_div').show('toggle'): $('#shipping_costs_div').hide();			
+	{rdelim});
+{/block}
 
-	public static $definition = array(
-		'table' => 'shippingpro_type',
-		'primary' => 'id_shippingpro_type',
-		'multilang' => true,
-		'fields' => array(
-			'name' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-		),
-	);
+{block name="label"}
+	{if $input.type == 'select' && $input.name == 'id_tax_rules_group'}
+		<div id="shipping_costs_div" style="display:{if isset($fields_value.is_free) && $fields_value.is_free}none{else}block{/if}">
+	{/if}
+	{$smarty.block.parent}
+{/block}
 
-	public static function getShippingproType()
-	{
-		return Db::getInstance()->executeS('
-			SELECT DISTINCT s.id_shippingpro_type, l.name
-			FROM `'._DB_PREFIX_.'shippingpro_type` s '
-			.'INNER JOIN `'._DB_PREFIX_.'shippingpro_type_lang` l ON (s.`id_shippingpro_type` = l.`id_shippingpro_type` AND l.`id_lang` = '.(int)Context::getContext()->language->id.')'
-			.'ORDER BY name ASC');
-	}
-
-	public static function insertDefaultData()
-	{
-		return true;
-	}
-}
+{block name="field"}
+	{$smarty.block.parent}
+	{if $input.type == 'select' && $input.name == 'range_behavior'}
+		</div>
+	{/if}
+{/block}

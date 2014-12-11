@@ -2,34 +2,23 @@
 
 class AdminShippingproCarriersController extends ModuleAdminController
 {
-	protected $position_identifier = 'id_shippingpro_carrier';
+	protected $position_identifier = 'id_carrier';
 
 	public function __construct()
 	{
 
-		if ($id_carrier = Tools::getValue('id_shippingpro_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier') && !Tools::isSubmit('onboarding_carrier'))
-			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminShippingproCarrierWizard').'&id_shippingpro_carrier='.(int)$id_carrier);
+		// if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier') && !Tools::isSubmit('onboarding_carrier'))
+		// 	Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminShippingproCarrierWizard').'&id_carrier='.(int)$id_carrier);
 
 		$this->bootstrap = true;
-		$this->table = 'shippingpro_carrier';
-		$this->className = 'ShippingproCarrier';
+		$this->table = 'carrier';
+		$this->className = 'Carrier';
 		$this->lang = false;
 		$this->deleted = true;
 
 		$this->addRowAction('edit');
-		$this->addRowAction('delete');
-
-		$this->_defaultOrderBy = 'position';
 
 		$this->context = Context::getContext();
-
-		$this->bulk_actions = array(
-			'delete' => array(
-				'text' => $this->l('Delete selected'),
-				'confirm' => $this->l('Delete selected items?'),
-				'icon' => 'icon-trash'
-			)
-		);
 
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
@@ -37,7 +26,7 @@ class AdminShippingproCarriersController extends ModuleAdminController
 		);
 
 		$this->fields_list = array(
-			'id_shippingpro_carrier' => array(
+			'id_carrier' => array(
 				'title' => $this->l('ID'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
@@ -60,13 +49,6 @@ class AdminShippingproCarriersController extends ModuleAdminController
 				'type' => 'bool',
 				'class' => 'fixed-width-sm',
 				'orderby' => false,
-			),
-			'position' => array(
-				'title' => $this->l('Position'),
-				'filter_key' => 'a!position',
-				'align' => 'center',
-				'class' => 'fixed-width-sm',
-				'position' => 'position'
 			)
 		);
 		parent::__construct();
@@ -80,7 +62,7 @@ class AdminShippingproCarriersController extends ModuleAdminController
 		parent::initToolbar();
 		
 		if (isset($this->toolbar_btn['new']) && $this->display != 'view')
-			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminShippingproCarriers').'&onboarding_carrier';
+			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
 	}
 
 	public function initPageHeaderToolbar()
@@ -88,7 +70,7 @@ class AdminShippingproCarriersController extends ModuleAdminController
 		$this->page_header_toolbar_title = $this->l('Carriers');
 		if ($this->display != 'view')
 			$this->page_header_toolbar_btn['new_carrier'] = array(
-				'href' => $this->context->link->getAdminLink('AdminShippingproCarriers').'&onboarding_carrier',
+				'href' => $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier',
 				'desc' => $this->l('Add new carrier', null, null, false),
 				'icon' => 'process-icon-new'
 			);
@@ -96,497 +78,415 @@ class AdminShippingproCarriersController extends ModuleAdminController
 		parent::initPageHeaderToolbar();
 	}
 	
-	public function renderView()
-	{
-		$this->initTabModuleList();
-		$this->filterTabModuleList();
-		$this->context->smarty->assign('panel_title', $this->l('Use one of our recommended carrier modules'));
-		$this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
-		unset($this->page_header_toolbar_btn['modules-list']);
-		return parent::renderView();
-	}
+	// public function renderView()
+	// {
+	// 	$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+	// 	$this->tpl_view_vars = array(
+	// 		'currency_sign' => $currency->sign,
+	// 		'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
+	// 		'item_unit' => 'item',
+	// 		'validate_url' => $this->context->link->getAdminLink('AdminShippingproCarrier'),
+	// 		'multistore_enable' => Shop::isFeatureActive(),
+	// 	);
+	// 	return parent::renderView();
+	// }
 	
 	public function renderList()
 	{
 		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shippingpro_carrier_lang` b ON a.id_shippingpro_carrier = b.id_shippingpro_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'shippingpro_carrier_tax_rules_group_shop` ctrgs ON (a.`id_shippingpro_carrier` = ctrgs.`id_shippingpro_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
 		return parent::renderList();
 	}
 
 	public function renderForm()
 	{
+		if (Tools::getValue('id_carrier') && $this->tabAccess['edit'])
+			$carrier = $this->loadObject();
+
+		if ((!$this->tabAccess['edit'] && Tools::getValue('id_carrier')) ||  (!$this->tabAccess['add'] && !Tools::getValue('id_carrier')))
+		{
+			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
+			return ;
+		}
+
+		$this->addJqueryPlugin('typewatch');
+		$this->addJs(_PS_MODULE_DIR_.'shippingpro/js/admin_carrier_wizard.js');
+
+		// $helper = new HelperView();
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$this->tpl_view_vars = array(
+			'currency_sign' => $currency->sign,
+			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
+			'item_unit' => 'item',
+			'validate_url' => $this->context->link->getAdminLink('AdminShippingproCarriers'),
+			'multistore_enable' => Shop::isFeatureActive(),
+			'content' => $this->renderCarrier($carrier),
+			'id_carrier' => Tools::getValue('id_carrier')
+		);
+
+		return $this->renderView();
+	}
+
+	public function renderCarrier($carrier)
+	{
+		$rules = $carrier->getZoneRules();
+
+		$context = '';
+		if (empty($rules)) {
+			$context .= $this->renderRuleView($this->getDefaultRule(), 0);
+		}
+		else {
+			foreach ($rules as $key => $rule) {
+				$context .= $this->renderRuleView($rule, $key);
+			}
+		}
+
+		return $context;
+	}
+	public function getDefaultRule()
+	{
+		return array(
+			'is_free' => false,
+			'shipping_handling' => false,
+			'shipping_method' => ShippingproRule::SHIPPING_METHOD_QUANTITY,
+			'id_zone' => 0,
+			'id_country' => 0,
+			'zip_code_min' => '',
+			'zip_code_max' => '',
+			'id_tax_rules_group' => 0,
+			'range_behavior' => 0,
+			'max_width' => 0,
+			'max_height' => 0,
+			'max_depth' => 0,
+			'max_weight' => 0,
+			'ranges' => array(array('lower'=>'', 'upper'=> '', 'price'=>''))
+		);
+	}
+
+	public function renderRuleView($rule, $index)
+	{
 		$this->fields_form = array(
-			'legend' => array(
-				'title' => $this->l('Carriers'),
-				'icon' => 'icon-truck'
-			),
-			'input' => array(
-				array(
-					'type' => 'text',
-					'label' => $this->l('Company'),
-					'name' => 'name',
-					'required' => true,
-					'hint' => array(
-						sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
-						$this->l('Carrier name displayed during checkout'),
-						$this->l('For in-store pickup, enter 0 to replace the carrier name with your shop name.')
-					)
+			'form' => array(
+				'id_form' => 'step_carrier_ranges',
+				'legend' => array(       
+					'title' => $this->l('Rule'),
 				),
-				array(
-					'type' => 'file',
-					'label' => $this->l('Logo'),
-					'name' => 'logo',
-					'hint' => $this->l('Upload a logo from your computer.').' (.gif, .jpg, .jpeg '.$this->l('or').' .png)'
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Speed grade'),
-					'name' => 'grade',
-					'required' => false,
-					'hint' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('URL'),
-					'name' => 'url',
-					'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.')
-				),
-				array(
-					'type' => 'checkbox',
-					'label' => $this->l('Zone'),
-					'name' => 'zone',
-					'values' => array(
-						'query' => Zone::getZones(false),
-						'id' => 'id_zone',
-						'name' => 'name'
-					),
-					'hint' => $this->l('The zones in which this carrier will be used.')
-				),
-				array(
-					'type' => 'group',
-					'label' => $this->l('Group access'),
-					'name' => 'groupBox',
-					'values' => Group::getGroups(Context::getContext()->language->id),
-					'hint' => $this->l('Mark the groups that are allowed access to this carrier.')
-				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Status'),
-					'name' => 'active',
-					'required' => false,
-					'class' => 't',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'active_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'active_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
+				'input' => array(
+					array(
+						'type' => 'select',
+						'label' => $this->l('Zone'),
+						'name' => 'id_zone',
+						'options' => array(
+							'query' => Zone::getZones(true),
+							'id' => 'id_zone',
+							'name' => 'name',
+							'default' => array(
+								'label' => $this->l('Select Zone'),
+								'value' => 0
+							)
 						)
 					),
-					'hint' => $this->l('Enable the carrier in the Front Office.')
-				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Apply shipping cost'),
-					'name' => 'is_free',
-					'required' => false,
-					'class' => 't',
-					'values' => array(
-						array(
-							'id' => 'is_free_on',
-							'value' => 0,
-							'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-						),
-						array(
-							'id' => 'is_free_off',
-							'value' => 1,
-							'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+					array(
+						'type' => 'select',
+						'label' => $this->l('Country'),
+						'name' => 'id_country',
+						'options' => array(
+							'query' => Country::getCountries($this->context->language->id, true),
+							'id' => 'id_country',
+							'name' => 'name',
+							'default' => array(
+								'label' => $this->l('Select Country'),
+								'value' => 0
+							)
 						)
 					),
-					'hint' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Tax'),
-					'name' => 'id_tax_rules_group',
-					'options' => array(
-						'query' => TaxRulesGroup::getTaxRulesGroups(true),
-						'id' => 'id_tax_rules_group',
-						'name' => 'name',
-						'default' => array(
-							'label' => $this->l('No Tax'),
-							'value' => 0
-						)
-					)
-				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Shipping and handling'),
-					'name' => 'shipping_handling',
-					'required' => false,
-					'class' => 't',
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'shipping_handling_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'shipping_handling_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
-						)
+					array(
+						'type' => 'text',
+						'label' => $this->l('Min zip code'),
+						'name' => 'zip_code_min',
+						'required' => false,
+						'hint' => $this->l('Min zip code')
 					),
-					'hint' => $this->l('Include the shipping and handling costs in the carrier price.')
-				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Billing'),
-					'name' => 'shipping_method',
-					'required' => false,
-					'class' => 't',
-					'br' => true,
-					'values' => array(
-						array(
-							'id' => 'billing_default',
-							'value' => ShippingproCarrier::SHIPPING_METHOD_DEFAULT,
-							'label' => $this->l('Default behavior')
-						),
-						array(
-							'id' => 'billing_price',
-							'value' => ShippingproCarrier::SHIPPING_METHOD_PRICE,
-							'label' => $this->l('According to total price')
-						),
-						array(
-							'id' => 'billing_weight',
-							'value' => ShippingproCarrier::SHIPPING_METHOD_WEIGHT,
-							'label' => $this->l('According to total weight')
-						)
-					)
-				),
-				array(
-					'type' => 'select',
-					'label' => $this->l('Out-of-range behavior'),
-					'name' => 'range_behavior',
-					'options' => array(
-						'query' => array(
+					array(
+						'type' => 'text',
+						'label' => $this->l('Max zip code'),
+						'name' => 'zip_code_max',
+						'required' => false,
+						'hint' => $this->l('Max zip code')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
+						'name' => 'max_height',
+						'required' => false,
+						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package width (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
+						'name' => 'max_width',
+						'required' => false,
+						'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package depth (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
+						'name' => 'max_depth',
+						'required' => false,
+						'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package weight (%s)'), Configuration::get('PS_WEIGHT_UNIT')),
+						'name' => 'max_weight',
+						'required' => false,
+						'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Add handling costs'),
+						'name' => 'shipping_handling',
+						'required' => false,
+						'class' => 't',
+						'values' => array(
 							array(
-								'id' => 0,
-								'name' => $this->l('Apply the cost of the highest defined range')
+								'id' => 'shipping_handling_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
 							),
 							array(
-								'id' => 1,
-								'name' => $this->l('Disable carrier')
+								'id' => 'shipping_handling_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
 							)
 						),
-						'id' => 'id',
-						'name' => 'name'
+						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
-					'hint' => $this->l('Out-of-range behavior occurs when none is defined (e.g. when a customer\'s cart weight is greater than the highest range limit).')
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Free shipping'),
+						'name' => 'is_free',
+						'required' => false,
+						'class' => 't',
+						'values' => array(
+							array(
+								'id' => 'is_free_on',
+								'value' => 1,
+								'label' => $this->l('Yes')
+							),
+							array(
+								'id' => 'is_free_off',
+								'value' => 0,
+								'label' => $this->l('No')
+							)
+						)
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Billing'),
+						'name' => 'shipping_method',
+						'required' => false,
+						'class' => 't',
+						'br' => true,
+						'values' => array(
+							array(
+								'id' => 'billing_price',
+								'value' => ShippingproRule::SHIPPING_METHOD_PRICE,
+								'label' => $this->l('According to total price.')
+							),
+							array(
+								'id' => 'billing_weight',
+								'value' => ShippingproRule::SHIPPING_METHOD_WEIGHT,
+								'label' => $this->l('According to total weight.')
+							),
+							array(
+								'id' => 'billing_quantity',
+								'value' => ShippingproRule::SHIPPING_METHOD_QUANTITY,
+								'label' => $this->l('According to total quantity.')
+							)
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Tax'),
+						'name' => 'id_tax_rules_group',
+						'options' => array(
+							'query' => TaxRulesGroup::getTaxRulesGroups(true),
+							'id' => 'id_tax_rules_group',
+							'name' => 'name',
+							'default' => array(
+								'label' => $this->l('No tax'),
+								'value' => 0
+							)
+						)
+					),
+					array(
+						'type' => 'select',
+						'label' => $this->l('Out-of-range behavior'),
+						'name' => 'range_behavior',
+						'options' => array(
+							'query' => array(
+								array(
+									'id' => 0,
+									'name' => $this->l('Apply the cost of the highest defined range')
+								),
+								array(
+									'id' => 1,
+									'name' => $this->l('Disable carrier')
+								)
+							),
+							'id' => 'id',
+							'name' => 'name'
+						),
+						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).')
+					),
+					array(
+						'type' => 'zone',
+						'name' => 'zones'
+					),
 				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Maximum package height'),
-					'name' => 'max_height',
-					'required' => false,
-					'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
+				'submit' => array(
+					'title' => $this->l('Delete'),
+					'class' => 'button'   
 				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Maximum package width'),
-					'name' => 'max_width',
-					'required' => false,
-					'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Maximum package depth'),
-					'name' => 'max_depth',
-					'required' => false,
-					'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Maximum package weight'),
-					'name' => 'max_weight',
-					'required' => false,
-					'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
-				),
-				array(
-					'type' => 'hidden',
-					'name' => 'is_module'
-				),
-				array(
-					'type' => 'hidden',
-					'name' => 'external_module_name',
-				),
-				array(
-					'type' => 'hidden',
-					'name' => 'shipping_external'
-				),
-				array(
-					'type' => 'hidden',
-					'name' => 'need_range'
-				),
-			)
-		);
 
-		if (Shop::isFeatureActive())
-		{
-			$this->fields_form['input'][] = array(
-				'type' => 'shop',
-				'label' => $this->l('Shop association'),
-				'name' => 'checkBoxShopAsso',
+			));
+
+		$tpl_vars = array();
+		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
+		$tpl_vars['item_unit'] = 'item';
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$tpl_vars['currency_sign'] = $currency->sign;
+
+		$fields_value = $rule;
+
+		$tpl_vars['ranges'] = $rule['ranges'];
+
+		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
+	}
+
+	public function getRuleFieldsValues($rule)
+	{
+		$id_tax_rules_group = (is_object($this->object) && !$this->object->id) ? Carrier::getIdTaxRulesGroupMostUsed() : $this->getFieldValue($rule, 'id_tax_rules_group');
+
+		$shipping_handling = (is_object($this->object) && !$this->object->id) ? 0 : $this->getFieldValue($rule, 'shipping_handling');
+
+		return array(
+			// 'is_free' => $this->getFieldValue($rule, 'is_free'),
+			'id_tax_rules_group' => (int)$id_tax_rules_group,
+			'shipping_handling' => $shipping_handling,
+			'shipping_method' => $this->getFieldValue($rule, 'shipping_method'),
+			'id_zone' =>  $this->getFieldValue($rule, 'id_zone'),
+			'id_country' =>  $this->getFieldValue($rule, 'id_country'),
+			'min_zip_code' =>  $this->getFieldValue($rule, 'min_zip_code'),
+			'max_zip_code' =>  $this->getFieldValue($rule, 'max_zip_code'),
+			'max_height' =>  $this->getFieldValue($rule, 'max_height'),
+			'max_width' =>  $this->getFieldValue($rule, 'max_width'),
+			'max_depth' =>  $this->getFieldValue($rule, 'max_depth'),
+			'max_weight' =>  $this->getFieldValue($rule, 'max_weight'),
+			'range_behavior' =>  $this->getFieldValue($rule, 'range_behavior'),
+		);
+	}
+
+	public function ajaxProcessNewRule()
+	{
+		die($this->renderRuleView($this->getDefaultRule(), 0));
+	}
+
+	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
+	{
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		$helper->id = (int)Tools::getValue('id_carrier');
+		$helper->identifier = $this->identifier;
+		$helper->tpl_vars = array_merge(array(
+				'fields_value' => $fields_value,
+				'languages' => $this->getLanguages(),
+				'id_language' => $this->context->language->id
+			), $tpl_vars);
+		$helper->override_folder = 'shippingpro_carriers/';
+
+		return $helper->generateForm($fields_form);
+	}
+
+	public function ajaxProcessFinish()
+	{
+		$return = array('has_error' => false);
+		if (!$this->tabAccess['edit'])
+			$return = array(
+				'has_error' =>  true,
+				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
 			);
-		}
-
-		$this->fields_form['submit'] = array(
-			'title' => $this->l('Save'),
-		);
-
-		if (!($obj = $this->loadObject(true)))
-			return;
-
-		$this->getFieldsValues($obj);
-		return parent::renderForm();
-	}
-
-	public function postProcess()
-	{
-		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
-			$this->ajaxProcessGetModuleQuickView();
-		
-		if (Tools::getValue('submitAdd'.$this->table))
-		{
-			/* Checking fields validity */
-			$this->validateRules();
-			if (!count($this->errors))
-			{
-				$id = (int)Tools::getValue('id_'.$this->table);
-
-				/* Object update */
-				if (isset($id) && !empty($id))
-				{
-					try {
-						if ($this->tabAccess['edit'] === '1')
-						{
-							$current_carrier = new ShippingproCarrier($id);
-							if (!Validate::isLoadedObject($current_carrier))
-								throw new PrestaShopException('Cannot load Carrier object');
-							
-							// Duplicate current Carrier
-							$new_carrier = $current_carrier->duplicateObject();
-							if (Validate::isLoadedObject($new_carrier))
-							{
-								// Set flag deteled to true for historization
-								$current_carrier->deleted = true;
-								$current_carrier->update();
-
-								// Fill the new carrier object
-								$this->copyFromPost($new_carrier, $this->table);
-								$new_carrier->position = $current_carrier->position;
-								$new_carrier->update();
-
-								$this->updateAssoShop($new_carrier->id);
-								$new_carrier->copyCarrierData((int)$current_carrier->id);
-								$this->changeGroups($new_carrier->id);
-								// Call of hooks
-								Hook::exec('actionCarrierUpdate', array(
-									'id_shippingpro_carrier' => (int)$current_carrier->id,
-									'carrier' => $new_carrier
-								));
-								$this->postImage($new_carrier->id);
-								$this->changeZones($new_carrier->id);
-								$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
-								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$current_carrier->id.'&conf=4&token='.$this->token);
-							}
-							else
-								$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.'</b>';
-						}
-						else
-							$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-					} catch (PrestaShopException $e) {
-						$this->errors[] = $e->getMessage();
-					}
-				}
-
-				/* Object creation */
-				else
-				{
-					if ($this->tabAccess['add'] === '1')
-					{
-						// Create new Carrier
-						$carrier = new ShippingproCarrier();
-						$this->copyFromPost($carrier, $this->table);
-						$carrier->position = ShippingproCarrier::getHigherPosition() + 1;
-						if ($carrier->add())
-						{
-							if (($_POST['id_'.$this->table] = $carrier->id /* voluntary */) && $this->postImage($carrier->id) && $this->_redirect)
-							{
-								$carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'), true);
-								$this->changeZones($carrier->id);
-								$this->changeGroups($carrier->id);
-								$this->updateAssoShop($carrier->id);
-								Tools::redirectAdmin(self::$currentIndex.'&id_'.$this->table.'='.$carrier->id.'&conf=3&token='.$this->token);
-							}
-						}
-						else
-							$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.'</b>';
-					}
-					else
-						$this->errors[] = Tools::displayError('You do not have permission to add this.');
-				}
-			}
-			parent::postProcess();
-		}
-		/*
-else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
-		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Tools::getValue('id_shippingpro_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your default carrier. ');
-				else
-					parent::postProcess();
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-		}
-*/
-		else if (isset($_GET['isFree'.$this->table]))
-		{
-			$this->processIsFree();
-		}
 		else
-		{
-		/*
-	if ((Tools::isSubmit('submitDel'.$this->table) && in_array(Configuration::get('PS_CARRIER_DEFAULT'), Tools::getValue('carrierBox')))
-				|| (isset($_GET['delete'.$this->table]) && Tools::getValue('id_shippingpro_carrier') == Configuration::get('PS_CARRIER_DEFAULT')))
-					$this->errors[] = $this->l('Please set another carrier as default before deleting this one.');
-			else
+		{	
+			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
-*/
-				// if deletion : removes the carrier from the warehouse/carrier association
-				if (Tools::isSubmit('delete'.$this->table))
-				{
-					$id = (int)Tools::getValue('id_'.$this->table);
-					// Delete from the reference_id and not from the carrier id
-					$carrier = new ShippingproCarrier((int)$id);
-					Warehouse::removeCarrier($carrier->id_reference);
-				}
-				else if (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
-				{
-					$ids = Tools::getValue($this->table.'Box');
-					array_walk($ids, 'intval');
-					foreach ($ids as $id)
-					{
-						// Delete from the reference_id and not from the carrier id
-						$carrier = new ShippingproCarrier((int)$id);
-						Warehouse::removeCarrier($carrier->id_reference);
-					}
-				}
-				parent::postProcess();
-				ShippingproCarrier::cleanPositions();
-			//}
-		}
-	}
-
-	public function processIsFree()
-	{
-		$carrier = new ShippingproCarrier($this->id_object);
-		if (!Validate::isLoadedObject($carrier))
-			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
-		$carrier->is_free = $carrier->is_free ? 0 : 1;
-		if (!$carrier->update())
-			$this->errors[] = Tools::displayError('An error occurred while updating carrier information.');
-		Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-	}
-
-	/**
-	 * Overload the property $fields_value
-	 *
-	 * @param object $obj
-	 */
-	public function getFieldsValues($obj)
-	{
-		if ($this->getFieldValue($obj, 'is_module'))
-			$this->fields_value['is_module'] = 1;
-
-		if ($this->getFieldValue($obj, 'shipping_external'))
-			$this->fields_value['shipping_external'] = 1;
-
-		if ($this->getFieldValue($obj, 'need_range'))
-			$this->fields_value['need_range'] = 1;
-		// Added values of object Zone
-		$carrier_zones = $obj->getZones();
-		$carrier_zones_ids = array();
-		if (is_array($carrier_zones))
-			foreach ($carrier_zones as $carrier_zone)
-				$carrier_zones_ids[] = $carrier_zone['id_zone'];
-
-		$zones = Zone::getZones(false);
-		foreach ($zones as $zone)
-			$this->fields_value['zone_'.$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
-
-		// Added values of object Group
-		$carrier_groups = $obj->getGroups();
-		$carrier_groups_ids = array();
-		if (is_array($carrier_groups))
-			foreach ($carrier_groups as $carrier_group)
-				$carrier_groups_ids[] = $carrier_group['id_group'];
-
-		$groups = Group::getGroups($this->context->language->id);
-
-		foreach ($groups as $group)
-			$this->fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$obj->id));
-
-		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
-	}
-
-	protected function beforeDelete($object)
-	{
-		return $object->isUsed();
-	}
-
-	protected function changeGroups($id_carrier, $delete = true)
-	{
-		if ($delete)
-			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'shippingpro_carrier_group WHERE id_shippingpro_carrier = '.(int)$id_carrier);
-		$groups = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
-		foreach ($groups as $group)
-			if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox')))
-				Db::getInstance()->execute('
-					INSERT INTO '._DB_PREFIX_.'shippingpro_carrier_group (id_group, id_shippingpro_carrier)
-					VALUES('.(int)$group['id_group'].','.(int)$id_carrier.')
-				');
-	}
-
-	public function changeZones($id)
-	{
-		$carrier = new $this->className($id);
-		if (!Validate::isLoadedObject($carrier))
-			die (Tools::displayError('The object cannot be loaded.'));
-		$zones = Zone::getZones(false);
-		foreach ($zones as $zone)
-			if (count($carrier->getZone($zone['id_zone'])))
-			{
-				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
-					$carrier->deleteZone($zone['id_zone']);
+				$carrier = new Carrier((int)$id_carrier);
 			}
 			else
-				if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
-					$carrier->addZone($zone['id_zone']);
+			{
+				$return['has_error'] = true;
+				$return['errors'][] = $this->l('No carrier');
+			}
+
+			if (Validate::isLoadedObject($carrier))
+			{
+				if (!$this->processRanges((int)$carrier->id))
+				{
+					$return['has_error'] = true;
+					$return['errors'][] = $this->l('An error occurred while saving carrier ranges.');
+				}
+				$return['id_carrier'] = $carrier->id;
+			}
+		}
+		die(Tools::jsonEncode($return));
 	}
 
-	/**
-	 * Modifying initial getList method to display position feature (drag and drop)
-	 */
+	public function processRanges($id_carrier)
+	{
+		if (!$this->tabAccess['edit'] || !$this->tabAccess['add'])
+		{
+			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
+			return;
+		}
+
+		$carrier = new Carrier((int)$id_carrier);
+		if (!Validate::isLoadedObject($carrier))
+			return false;
+
+		$carrier->deleteRules();
+
+		if (Tools::getValue('is_free')) {
+			return true;
+		}
+
+		foreach (Tools::getValue('rule_form') as $key => $rule) {
+			$new_rule = new ShippingproRule();
+			if (array_key_exists('range_inf', $rule)) {
+				$ranges = array();
+				$count = count($rule['range_inf']);
+				for ($i=0; $i < $count; $i++) { 
+					$ranges[] = array(
+						'lower' => $rule['range_inf'][$i],
+						'upper' => $rule['range_sup'][$i],
+						'price' => $rule['fees'][$i]
+					);
+				}
+				$rule['ranges'] = serialize($ranges);
+			}
+			$new_rule->copyFromData($rule);
+			$new_rule->id_carrier = $id_carrier;
+			$new_rule->add();
+		}
+
+		return true;
+	}
+
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
@@ -596,85 +496,6 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
 	}
 
-	public function ajaxProcessUpdatePositions()
-	{
-		$way = (int)(Tools::getValue('way'));
-		$id_carrier = (int)(Tools::getValue('id'));
-		$positions = Tools::getValue($this->table);
-
-		foreach ($positions as $position => $value)
-		{
-			$pos = explode('_', $value);
-
-			if (isset($pos[2]) && (int)$pos[2] === $id_carrier)
-			{
-				if ($carrier = new Carrier((int)$pos[2]))
-					if (isset($position) && $carrier->updatePosition($way, $position))
-						echo 'ok position '.(int)$position.' for carrier '.(int)$pos[1].'\r\n';
-					else
-						echo '{"hasError" : true, "errors" : "Can not update carrier '.(int)$id_carrier.' to position '.(int)$position.' "}';
-				else
-					echo '{"hasError" : true, "errors" : "This carrier ('.(int)$id_carrier.') can t be loaded"}';
-
-				break;
-			}
-		}
-	}
-
-	public function displayEditLink($token = null, $id, $name = null)
-	{
-		if ($this->tabAccess['edit'] == 1)
-		{
-			$tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
-			if (!array_key_exists('Edit', self::$cache_lang))
-				self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
-
-			$tpl->assign(array(
-				'href' => $this->context->link->getAdminLink('AdminShippingproCarrierWizard').'&id_shippingpro_carrier='.(int)$id,
-				'action' => self::$cache_lang['Edit'],
-				'id' => $id
-			));
-
-			return $tpl->fetch();
-		}
-		else
-			return;
-	}
-	
-	public function displayDeleteLink($token = null, $id, $name = null)
-	{
-		if ($this->tabAccess['delete'] == 1)
-		{
-			$tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
-
-			if (!array_key_exists('Delete', self::$cache_lang))
-				self::$cache_lang['Delete'] = $this->l('Delete', 'Helper');
-
-			if (!array_key_exists('DeleteItem', self::$cache_lang))
-				self::$cache_lang['DeleteItem'] = $this->l('Delete selected item?', 'Helper');
-
-			if (!array_key_exists('Name', self::$cache_lang))
-				self::$cache_lang['Name'] = $this->l('Name:', 'Helper');
-
-			if (!is_null($name))
-				$name = '\n\n'.self::$cache_lang['Name'].' '.$name;
-
-			$data = array(
-				$this->identifier => $id,
-				'href' => $this->context->link->getAdminLink('AdminShippingproCarriers').'&id_shippingpro_carrier='.(int)$id.'&deletecarrier=1',
-				'action' => self::$cache_lang['Delete'],
-			);
-
-			if ($this->specificConfirmDelete !== false)
-				$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : addcslashes(Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'].$name), '\'');
-
-			$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
-
-			return $tpl->fetch();
-		}
-		else
-			return;
-	}
 	
 	protected function initTabModuleList()
 	{

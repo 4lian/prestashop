@@ -1,13 +1,13 @@
 <?php
 
-class AdminShippingproProductGroupController extends ModuleAdminController
+class AdminShippingproPgroupController extends ModuleAdminController
 {
 
 	public function __construct()
 	{
 		$this->bootstrap = true;
-		$this->table = 'shippingpro_product_group';
-		$this->className = 'ShippingproProductGroup';
+		$this->table = 'shippingpro_pgroup';
+		$this->className = 'ShippingproPgroup';
 		$this->lang = true;
 		$this->deleted = false;
 

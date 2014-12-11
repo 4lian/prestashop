@@ -14,53 +14,10 @@ $(document).ready(function() {
 	bind_inputs();
 	initCarrierWizard();
 	initRange();
-
-	$('#attachement_fileselectbutton').click(function(e) {
-		$('#carrier_logo_input').trigger('click');
-	});
-
-	$('#attachement_filename').click(function(e) {
-		$('#carrier_logo_input').trigger('click');
-	});
-
-	$('#carrier_logo_input').change(function(e) {
-		if ($(this)[0].files !== undefined)
-		{
-			var files = $(this)[0].files;
-			var name  = '';
-
-			$.each(files, function(index, value) {
-				name += value.name+', ';
-			});
-
-			$('#attachement_filename').val(name.slice(0, -2));
-		}
-		else // Internet Explorer 9 Compatibility
-		{
-			var name = $(this).val().split(/[\\/]/);
-			$('#attachement_filename').val(name[name.length-1]);
-		}
-	});
-
-	$('#carrier_logo_remove').click(function(e) {
-		$('#attachement_filename').val('');
-	});
 });
 
 function initCarrierWizard()
 {
-	$("#carrier_wizard").smartWizard({
-		'labelNext' : labelNext,
-		'labelPrevious' : labelPrevious,
-		'labelFinish' : labelFinish,
-		'fixHeight' : 1,
-		'onShowStep' : onShowStepCallback,
-		'onLeaveStep' : onLeaveStepCallback,
-		'onFinish' : onFinishCallback,
-		'transitionEffect' : 'slideleft',
-		'enableAllSteps' : enableAllSteps,
-		'keyNavigation' : false
-	});
 	displayRangeType();
 }
 
@@ -94,46 +51,40 @@ function displayRangeType()
 	});
 }
 
-function onShowStepCallback()
-{
-	$('.anchor li a').each(function () {
-		$(this).closest('li').addClass($(this).attr('class'));
-	});
-	$('#carrier_logo_block').prependTo($('div.content').filter(function() { return $(this).css('display') != 'none' }).find('.defaultForm').find('fieldset'));
-	resizeWizard();
-}
-
-
-function onFinishCallback(obj, context)
+var kkee = true;
+function onFinishCallback()
 {
 	$('.wizard_error').remove();
 
-	var range_index = 0;
-	$("*[id='step_carrier_ranges']").each(function(){
-		$(this).find('input, select').each(function(){
-			var name = $(this).attr('name');
-			if (name) {
-				if (name.search('\\[\\]') != -1) 
-					$(this).attr('name', 'rule_form['+range_index+']['+name.replace('\[\]', '')+'][]');
-				else
-					$(this).attr('name', 'rule_form['+range_index+']['+name+']');
-			}
+	if (kkee) {
+		kkee = false;
+		var range_index = 0;
+		$("*[id='step_carrier_ranges']").each(function(){
+			$(this).find('input, select').each(function(){
+				var name = $(this).attr('name');
+				if (name) {
+					if (name.search('\\[\\]') != -1) 
+						$(this).attr('name', 'rule_form['+range_index+']['+name.replace('\[\]', '')+'][]');
+					else
+						$(this).attr('name', 'rule_form['+range_index+']['+name+']');
+				}
+			});
+			range_index++;
 		});
-		range_index++;
-	});
+	};
 
 	$.ajax({
 		type:"POST",
 		url : validate_url,
 		async: false,
 		// dataType: 'json',
-		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1&step_number='+context.fromStep,
+		data : $('#rule-content form').serialize() + '&action=finish&ajax=1&id_carrier='+id_carrier,
 		success : function(data) {
 			console.log(data);
 			return
 			if (data.has_error)
 			{				
-				displayError(data.errors, context.fromStep);
+				displayError(data.errors, 2);
 				resizeWizard();
 			}
 			else
@@ -304,7 +255,7 @@ function displayError(errors, step_number)
 
 function resizeWizard()
 {
-	resizeInterval = setInterval(function (){$("#carrier_wizard").smartWizard('fixHeight'); clearInterval(resizeInterval)}, 100);
+	// resizeInterval = setInterval(function (){$("#carrier_wizard").smartWizard('fixHeight'); clearInterval(resizeInterval)}, 100);
 }
 
 function bind_inputs()
@@ -605,7 +556,7 @@ function add_new_range(ele)
 	$form.find('tr.fees').each(function () {
 		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
 	});
-	$form.find('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
+	// $form.find('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
 	
 	bind_inputs();
 	rebuildTabindex();
@@ -775,7 +726,7 @@ function add_new_rule(ele) {
 		async: false,
 		data : 'action=new_rule&ajax=1',
 		success : function(data) {
-			$('.new_rule').before(data);
+			$('#rule-content').append(data);
 			bind_inputs();
 			initRange();
 			resizeWizard();
