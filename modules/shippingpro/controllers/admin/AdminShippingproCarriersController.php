@@ -53,10 +53,6 @@ class AdminShippingproCarriersController extends ModuleAdminController
 				'orderby' => false,
 				'search' => false
 			),
-			'delay' => array(
-				'title' => $this->l('Delay'),
-				'orderby' => false
-			),
 			'active' => array(
 				'title' => $this->l('Status'),
 				'align' => 'center',
@@ -141,15 +137,6 @@ class AdminShippingproCarriersController extends ModuleAdminController
 					'label' => $this->l('Logo'),
 					'name' => 'logo',
 					'hint' => $this->l('Upload a logo from your computer.').' (.gif, .jpg, .jpeg '.$this->l('or').' .png)'
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Transit time'),
-					'name' => 'delay',
-					'lang' => true,
-					'required' => true,
-					'maxlength' => 128,
-					'hint' => $this->l('Estimated delivery time will be displayed during checkout.')
 				),
 				array(
 					'type' => 'text',

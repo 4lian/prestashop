@@ -1,15 +1,19 @@
 
 var fees_is_hide = false;
 
-$(document).ready(function() {
-	bind_inputs();
-	initCarrierWizard();
-	$("*[id^='step_carrier_ranges_']").each(function(){
+function initRange() {
+	$("*[id='step_carrier_ranges']").each(function(){
 		var $is_free = $(this).find('input[name="is_free"]:checked');
 		if (parseInt($is_free.val()))
 			is_freeClick($is_free);
 	});
 	displayRangeType();
+}
+
+$(document).ready(function() {
+	bind_inputs();
+	initCarrierWizard();
+	initRange();
 
 	$('#attachement_fileselectbutton').click(function(e) {
 		$('#carrier_logo_input').trigger('click');
@@ -62,7 +66,7 @@ function initCarrierWizard()
 
 function displayRangeType()
 {
-	$("*[id^='step_carrier_ranges_']").each(function(){
+	$("*[id='step_carrier_ranges']").each(function(){
 		var shipping_method = parseInt($(this).find('input[name="shipping_method"]:checked').val());
 		switch (shipping_method) {
 			case 1:
@@ -99,16 +103,34 @@ function onShowStepCallback()
 	resizeWizard();
 }
 
+
 function onFinishCallback(obj, context)
 {
 	$('.wizard_error').remove();
+
+	var range_index = 0;
+	$("*[id='step_carrier_ranges']").each(function(){
+		$(this).find('input, select').each(function(){
+			var name = $(this).attr('name');
+			if (name) {
+				if (name.search('\\[\\]') != -1) 
+					$(this).attr('name', 'rule_form['+range_index+']['+name.replace('\[\]', '')+'][]');
+				else
+					$(this).attr('name', 'rule_form['+range_index+']['+name+']');
+			}
+		});
+		range_index++;
+	});
+
 	$.ajax({
 		type:"POST",
 		url : validate_url,
 		async: false,
-		dataType: 'json',
+		// dataType: 'json',
 		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1&step_number='+context.fromStep,
 		success : function(data) {
+			console.log(data);
+			return
 			if (data.has_error)
 			{				
 				displayError(data.errors, context.fromStep);
@@ -118,6 +140,7 @@ function onFinishCallback(obj, context)
 				window.location.href = carrierlist_url;
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			debugger;
 			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
 		}
 	});
@@ -220,8 +243,13 @@ function validateSteps(fromStep, toStep)
 	var is_ok = true;
 	if ((multistore_enable && fromStep == 3) || (!multistore_enable && fromStep == 2))
 	{
-		if (toStep > fromStep && !$('#is_free_on').attr('checked') && !validateRange(2))
-			is_ok = false;
+		if (toStep > fromStep) {
+			$("*[id='step_carrier_ranges']").each(function(){
+				if (!$(this).find('#is_free_on').attr('checked') && !validateRange(2, $(this))) {
+					is_ok = false;
+				}
+			});
+		} 
 	}
 	
 	$('.wizard_error').remove();
@@ -290,7 +318,7 @@ function bind_inputs()
 	$('tr.delete_range td button').off('click').on('click', function () {
 		if (confirm(delete_range_confirm))
 		{
-			var $form = $(this).closest("*[id^='step_carrier_ranges_']");
+			var $form = $(this).closest("*[id='step_carrier_ranges']");
 			index = $(this).closest('td').index();
 			$form.find('tr.range_sup td:eq('+index+'), tr.range_inf td:eq('+index+'), tr.fees_all td:eq('+index+'), tr.delete_range td:eq('+index+')').remove();
 			$form.find('tr.fees').each(function () {
@@ -350,7 +378,7 @@ function bind_inputs()
 		wait: 1000,
 		callback: function() { 
 			var index = $(this.el).closest('td').index();
-			var $form = $(this.el).closest("*[id^='step_carrier_ranges_']");
+			var $form = $(this.el).closest("*[id='step_carrier_ranges']");
 			var range_sup = $form.find('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim();
 			var range_inf = $form.find('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim();
 			if (range_sup != '' && range_inf != '')
@@ -367,7 +395,7 @@ function bind_inputs()
 		index = $(this).closest('td').index();
 		val = $(this).val();
 		$(this).val('');
-		$(this).closest("*[id^='step_carrier_ranges_']").find('tr.fees').each(function () {
+		$(this).closest("*[id='step_carrier_ranges']").find('tr.fees').each(function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
 		});
 		
@@ -386,12 +414,20 @@ function bind_inputs()
 	$('#zones_table td input[type=text]').off('change').on('change', function () {
 		checkAllFieldIsNumeric();
 	});	
+
+	$('*[name="submitAddcarrier"]').off('click').on('click', function(e) {
+		e.preventDefault();
+		if (confirm(delete_rule_confirm)) {
+			$(this).closest('#step_carrier_ranges').remove();
+		}
+	});
+
 }
 
 function is_freeClick(elt)
 {
 	var is_free = $(elt);
-	var $form = is_free.closest("*[id^='step_carrier_ranges_']");
+	var $form = is_free.closest("*[id='step_carrier_ranges']");
 	if (parseInt(is_free.val()))
 		hideFees($form);
 	else if (fees_is_hide)
@@ -552,7 +588,7 @@ function disableRange(index, $form)
 
 function add_new_range(ele)
 {
-	var $form = $(ele).closest("*[id^='step_carrier_ranges_']");
+	var $form = $(ele).closest("*[id='step_carrier_ranges']");
 	if (!$form.find('tr.fees_all td:last').hasClass('validated'))
 	{
 		alert(need_to_validate);
@@ -561,9 +597,9 @@ function add_new_range(ele)
 	
 	last_sup_val = $form.find('tr.range_sup td:last input').val();
 	//add new rand sup input
-	$form.find('tr.range_sup td:last').after('<td class="range_data"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
+	$form.find('tr.range_sup td:last').after('<td class="range_data"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><span class="input-group-addon price_quantity">'+item_unit+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
 	//add new rand inf input
-	$form.find('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
+	$form.find('tr.range_inf td:last').after('<td class="border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><span class="input-group-addon price_quantity">'+item_unit+'</span><input class="form-control" name="range_inf[]" type="text" value="'+last_sup_val+'" /></div></td>');
 	$form.find('tr.fees_all td:last').after('<td class="border_top border_bottom"><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign" style="display:none" >'+currency_sign+'</span><input class="form-control" style="display:none" type="text" /></div></td>');
 
 	$form.find('tr.fees').each(function () {
@@ -595,17 +631,19 @@ function checkAllFieldIsNumeric()
 
 function rebuildTabindex()
 {
-	i = 1;
-	$('#zones_table tr').each(function () 
-	{	
-		j = i;
-		$(this).find('td').each(function () 
-		{
-			j = zones_nbr + j;
-			if ($(this).index() >= 2 && $(this).find('div.input-group input'))
-				$(this).find('div.input-group input').attr('tabindex', j);
+	$("*[id='step_carrier_ranges']").each(function(){		
+		var i = 1, j;
+		$(this).find('#zones_table tr').each(function () 
+		{	
+			j = i;
+			$(this).find('td').each(function () 
+			{
+				j = 4 + j;
+				if ($(this).index() >= 2 && $(this).find('div.input-group input'))
+					$(this).find('div.input-group input').attr('tabindex', j);
+			});
+			i++;
 		});
-		i++;
 	});
 }
 
@@ -675,7 +713,7 @@ function isOverlapping()
 {
 	var is_valid = false;
 	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
-	$("*[id^='step_carrier_ranges_']").each(function(){
+	$("*[id='step_carrier_ranges']").each(function(){
 		var $form = $(this);
 		$form.find('tr.range_sup td').not('.range_type, .range_sign').each( function ()
 		{
@@ -727,4 +765,26 @@ function checkAllZones(elt)
 		$('.fees div.input-group input:text, .fees_all div.input-group input:text').attr('disabled', 'disabled');
 	}
 	
+}
+
+
+function add_new_rule(ele) {
+	$.ajax({
+		type:"POST",
+		url : validate_url,
+		async: false,
+		data : 'action=new_rule&ajax=1',
+		success : function(data) {
+			$('.new_rule').before(data);
+			bind_inputs();
+			initRange();
+			resizeWizard();
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			jAlert("TECHNICAL ERROR: \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		}
+	});
+
+
+	return false;
 }

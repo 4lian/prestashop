@@ -2,19 +2,11 @@
 
 class ShippingproCarrierZone extends ObjectModel
 {
-	/**
-	 * getCarriers method filter
-	 */
-	const PS_CARRIERS_ONLY = 1;
-	const CARRIERS_MODULE = 2;
-	const CARRIERS_MODULE_NEED_RANGE = 3;
-	const PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE = 4;
-	const ALL_CARRIERS = 5;
-
 	const SHIPPING_METHOD_DEFAULT = 0;
 	const SHIPPING_METHOD_WEIGHT = 1;
 	const SHIPPING_METHOD_PRICE = 2;
 	const SHIPPING_METHOD_FREE = 3;
+	const SHIPPING_METHOD_QUANTITY = 4;
 
 	const SORT_BY_PRICE = 0;
 	const SORT_BY_POSITION = 1;
@@ -40,6 +32,8 @@ class ShippingproCarrierZone extends ObjectModel
 
 	public $range_behavior;
 
+	public $is_free;
+
 	public $shipping_method;
 
 	public $max_width;
@@ -50,7 +44,7 @@ class ShippingproCarrierZone extends ObjectModel
 
 	public $max_weight;
 
-	public $rule;
+	public $ranges;
 
 	public $description;
 
@@ -60,9 +54,9 @@ class ShippingproCarrierZone extends ObjectModel
 	 */
 	public static $definition = array(
 		'table' => 'shippingpro_carrier_zone',
-		'primary' => 'id_shippingpro_carrier',
-		'multilang' => true,
-		'multilang_shop' => true,
+		'primary' => 'id_shippingpro_carrier_zone',
+		'multilang' => false,
+		'multilang_shop' => false,
 		'fields' => array(
 			'id_shippingpro_carrier_zone' => array('type' => self::TYPE_INT),
 			'id_shippingpro_carrier' => array('type' => self::TYPE_INT),
@@ -74,12 +68,13 @@ class ShippingproCarrierZone extends ObjectModel
 			'shipping_handling' => 		array('type' => self::TYPE_INT),
 			'handling_fee' => 			array('type' => self::TYPE_INT),
 			'range_behavior' => 		array('type' => self::TYPE_INT),
+			'is_free' => 				array('type' => self::TYPE_INT),
 			'shipping_method' => 		array('type' => self::TYPE_INT),
 			'max_width' => 				array('type' => self::TYPE_INT),
 			'max_height' => 			array('type' => self::TYPE_INT),
 			'max_depth' => 				array('type' => self::TYPE_INT),
 			'max_weight' => 			array('type' => self::TYPE_FLOAT),
-			'rule' => 					array('type' => self::TYPE_STRING),
+			'ranges' => 				array('type' => self::TYPE_STRING),
 			'description' => 			array('type' => self::TYPE_STRING),
 		),
 	);
@@ -105,8 +100,8 @@ class ShippingproCarrierZone extends ObjectModel
 		 * keep retrocompatibility SHIPPING_METHOD_DEFAULT
 		 * @deprecated 1.5.5
 		 */
-		if ($this->shipping_method == ShippingproCarrier::SHIPPING_METHOD_DEFAULT)
-			$this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? ShippingproCarrier::SHIPPING_METHOD_WEIGHT : ShippingproCarrier::SHIPPING_METHOD_PRICE);
+		if ($this->shipping_method == ShippingproCarrierZone::SHIPPING_METHOD_DEFAULT)
+			$this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? ShippingproCarrierZone::SHIPPING_METHOD_WEIGHT : ShippingproCarrierZone::SHIPPING_METHOD_PRICE);
 
 		/**
 		 * keep retrocompatibility id_tax_rules_group
@@ -116,6 +111,30 @@ class ShippingproCarrierZone extends ObjectModel
 			$this->id_tax_rules_group = $this->getIdTaxRulesGroup(Context::getContext());
 	}
 
+	public function copyFromData($data)
+	{
+		$table = $this->definition['table'];
+		foreach ($data as $key => $value)
+			if (array_key_exists($key, $this) && $key != 'id_'.$table)
+			{
+				$this->{$key} = $value;
+			}
+
+		/* Multilingual fields */
+		// $languages = Language::getLanguages(false);
+		// $fields = $this->definition['fields'];
+
+		// foreach ($fields as $field => $params) {
+		// 	if (array_key_exists('lang', $params) && $params['lang']) {
+		// 		foreach ($languages as $language) {
+		// 			if (isset($data[$field.'_'.(int)$language['id_lang']])) {
+		// 				$this->{$field}[(int)$language['id_lang']] = $data[$field.'_'.(int)$language['id_lang']];
+		// 			}
+		// 		}
+		// 	}
+		// }
+	}
+
 	public function add($autodate = true, $null_values = false)
 	{
 		
@@ -123,13 +142,6 @@ class ShippingproCarrierZone extends ObjectModel
 			$this->position = ShippingproCarrier::getHigherPosition() + 1;
 		if (!parent::add($autodate, $null_values) || !Validate::isLoadedObject($this))
 			return false;
-		if (!$count = Db::getInstance()->getValue('SELECT count(`id_shippingpro_carrier`) FROM `'._DB_PREFIX_.$this->def['table'].'` WHERE `deleted` = 0'))
-			return false;
-		if ($count == 1)
-			Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$this->id);
-
-		// Register reference
-		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.$this->def['table'].'` SET `id_reference` = '.$this->id.' WHERE `id_shippingpro_carrier` = '.$this->id);
 
 		return true;
 	}

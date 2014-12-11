@@ -11,12 +11,6 @@ class ShippingproCarrier extends ObjectModel
 	const PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE = 4;
 	const ALL_CARRIERS = 5;
 
-	const SHIPPING_METHOD_DEFAULT = 0;
-	const SHIPPING_METHOD_WEIGHT = 1;
-	const SHIPPING_METHOD_PRICE = 2;
-	const SHIPPING_METHOD_FREE = 3;
-	const SHIPPING_METHOD_QUANTITY = 4;
-
 	const SORT_BY_PRICE = 0;
 	const SORT_BY_POSITION = 1;
 
@@ -61,9 +55,6 @@ class ShippingproCarrier extends ObjectModel
 			'grade' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 1),
 			'position' => 				array('type' => self::TYPE_INT),
 			'deleted' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-
-			/* Lang fields */
-			'delay' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
 
@@ -83,13 +74,6 @@ class ShippingproCarrier extends ObjectModel
 	public function __construct($id = null, $id_lang = null)
 	{
 		parent::__construct($id, $id_lang);
-
-		/**
-		 * keep retrocompatibility SHIPPING_METHOD_DEFAULT
-		 * @deprecated 1.5.5
-		 */
-		if ($this->shipping_method == ShippingproCarrier::SHIPPING_METHOD_DEFAULT)
-			$this->shipping_method = ((int)Configuration::get('PS_SHIPPING_METHOD') ? ShippingproCarrier::SHIPPING_METHOD_WEIGHT : ShippingproCarrier::SHIPPING_METHOD_PRICE);
 
 		/**
 		 * keep retrocompatibility id_tax_rules_group
@@ -334,7 +318,7 @@ class ShippingproCarrier extends ObjectModel
 			return array();
 
 		$sql = '
-		SELECT c.*, cl.delay
+		SELECT c.*
 		FROM `'._DB_PREFIX_.'shippingpro_carrier` c
 		LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.`id_shippingpro_carrier` = cl.`id_shippingpro_carrier` AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
 		LEFT JOIN `'._DB_PREFIX_.'shippingpro_carrier_zone` cz ON (cz.`id_shippingpro_carrier` = c.`id_shippingpro_carrier`)'.
@@ -661,6 +645,13 @@ class ShippingproCarrier extends ObjectModel
 			$where .= 'AND id_shop = '.(int)Shop::getContextShopID();
 
 		return Db::getInstance()->delete('shippingpro_delivery', $where);
+	}
+
+	public function deleteRules()
+	{
+		$where = '`id_shippingpro_carrier` = '.(int)$this->id;
+
+		return Db::getInstance()->delete('shippingpro_carrier_zone', $where);
 	}
 
 	/**

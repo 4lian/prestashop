@@ -1,4 +1,4 @@
-		<script>var zones_nbr = {$zones|count +3} ; /*corresponds to the third input text (max, min and all)*/</script>
+
 		<div id="zone_ranges" style="overflow:auto">
 			<h4>{l s='Ranges'}</h4>
 			<table id="zones_table" class="table" style="max-width:100%">
@@ -11,7 +11,7 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<span class="input-group-addon price_quantity">item</span>
+								<span class="input-group-addon price_quantity">{$item_unit}</span>
 								<input class="form-control" name="range_inf[]" type="text" value="{$range.lower|string_format:"%.6f"}" />
 							</div>
 						</td>
@@ -20,7 +20,7 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<span class="input-group-addon price_quantity">item</span>
+								<span class="input-group-addon price_quantity">{$item_unit}</span>
 								<input name="form-control range_inf[]" type="text" />
 							</div>
 						</td>
